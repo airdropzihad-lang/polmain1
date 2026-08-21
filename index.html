@@ -26,7 +26,7 @@
   <style>
     body {
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-      background-color: #f1f5f9;
+      background-color: #f8fafc;
       color: #0f172a;
       min-height: 100vh;
       user-select: none;
@@ -70,35 +70,30 @@
     </div>
   </div>
 
-  <!-- TOP HEADER (UPDATED WITH USERNAME & ACTIVE ICON) -->
+  <!-- TOP HEADER -->
   <header class="bg-white/90 backdrop-blur-md sticky top-0 z-30 px-4 py-3 border-b border-slate-100 flex justify-between items-center">
     <div class="flex items-center gap-2">
-      <!-- Active User Avatar / Icon -->
       <div class="relative">
         <div class="w-8 h-8 rounded-full bg-brand-blue flex items-center justify-center text-white font-black text-xs overflow-hidden border border-brand-blue/30">
-          <img id="headerAvatar" src="https://via.placeholder.com/40/0098ea/ffffff?text=U" alt="Avatar" class="w-full h-full object-cover hidden">
+          <img id="headerAvatar" src="" alt="Avatar" class="w-full h-full object-cover hidden">
           <span id="headerAvatarFallback">◆</span>
         </div>
-        <!-- Online/Active Indicator -->
         <span class="w-2.5 h-2.5 bg-emerald-500 border-2 border-white rounded-full absolute -bottom-0.5 -right-0.5"></span>
       </div>
-      <!-- User First Name -->
-      <span id="headerUserName" class="font-bold text-base text-slate-900 tracking-tight">User Name</span>
+      <span id="headerUserName" class="font-bold text-base text-slate-900 tracking-tight">ZIHAD</span>
     </div>
 
-    <!-- Balance Badge -->
     <div class="bg-slate-100 border border-slate-200/80 rounded-full px-3 py-1 flex items-center gap-1.5 shadow-sm">
       <span class="text-brand-blue text-xs font-bold">◆</span>
       <span id="headerBalance" class="text-xs font-black text-slate-800">0</span>
     </div>
   </header>
 
-  <!-- MAIN APP CONTAINER -->
+  <!-- MAIN CONTAINER -->
   <main class="max-w-md mx-auto px-4 pt-4">
 
     <!-- 1. HOME TAB -->
     <section id="tab-home" class="tab-content active space-y-4">
-      <!-- MAIN BALANCE CARD -->
       <div class="bg-gradient-to-r from-sky-400 to-brand-blue rounded-3xl p-5 text-white shadow-lg shadow-sky-500/20 relative overflow-hidden">
         <p class="text-[11px] font-bold uppercase opacity-80 tracking-wider">Your Balance</p>
         <div class="flex items-center gap-2 my-2">
@@ -124,7 +119,7 @@
         </div>
       </div>
 
-      <!-- DAILY BONUS CARD -->
+      <!-- DAILY BONUS -->
       <div class="bg-white rounded-2xl p-4 border border-slate-100 shadow-sm flex items-center justify-between">
         <div class="flex items-center gap-3">
           <div class="w-11 h-11 rounded-2xl bg-amber-100 text-amber-500 flex items-center justify-center text-xl shadow-inner">
@@ -140,56 +135,33 @@
         </button>
       </div>
 
-      <!-- REDEEM CODE CARD -->
-      <div class="bg-white rounded-2xl p-4 border border-slate-100 shadow-sm flex items-center justify-between">
-        <div class="flex items-center gap-3">
-          <div class="w-11 h-11 rounded-2xl bg-purple-100 text-purple-500 flex items-center justify-center text-xl shadow-inner">
-            🎟️
-          </div>
-          <div>
-            <h3 class="font-bold text-slate-800 text-xs">Redeem Code</h3>
-            <p class="text-[11px] text-slate-400">Have a promo code? Claim reward</p>
-          </div>
-        </div>
-        <button onclick="showToast('Promo code system coming soon!')" class="px-4 py-2 rounded-xl bg-sky-400 text-white text-xs font-bold btn-action">
-          Redeem
-        </button>
-      </div>
-
       <!-- STATS GRID -->
       <div class="grid grid-cols-3 gap-2">
         <div class="bg-white p-3 rounded-2xl border border-slate-100 shadow-sm text-center">
-          <div class="w-8 h-8 rounded-xl bg-emerald-100 text-emerald-500 mx-auto flex items-center justify-center text-sm font-bold mb-1">
-            📥
-          </div>
+          <div class="w-8 h-8 rounded-xl bg-emerald-100 text-emerald-500 mx-auto flex items-center justify-center text-sm font-bold mb-1">📥</div>
           <p id="statEarned" class="text-sm font-black text-slate-800">0</p>
           <p class="text-[10px] text-slate-400">Earned today</p>
         </div>
         <div class="bg-white p-3 rounded-2xl border border-slate-100 shadow-sm text-center">
-          <div class="w-8 h-8 rounded-xl bg-sky-100 text-sky-500 mx-auto flex items-center justify-center text-sm font-bold mb-1">
-            📺
-          </div>
+          <div class="w-8 h-8 rounded-xl bg-sky-100 text-sky-500 mx-auto flex items-center justify-center text-sm font-bold mb-1">📺</div>
           <p id="statTasks" class="text-sm font-black text-slate-800">0</p>
           <p class="text-[10px] text-slate-400">Tasks done</p>
         </div>
         <div class="bg-white p-3 rounded-2xl border border-slate-100 shadow-sm text-center">
-          <div class="w-8 h-8 rounded-xl bg-indigo-100 text-indigo-500 mx-auto flex items-center justify-center text-sm font-bold mb-1">
-            👤
-          </div>
-          <p class="text-sm font-black text-slate-800">0</p>
+          <div class="w-8 h-8 rounded-xl bg-indigo-100 text-indigo-500 mx-auto flex items-center justify-center text-sm font-bold mb-1">👥</div>
+          <p class="text-sm font-black text-slate-800">12</p>
           <p class="text-[10px] text-slate-400">Invited</p>
         </div>
       </div>
     </section>
 
-    <!-- 2. EARN (TASKS) TAB -->
+    <!-- 2. EARN TAB -->
     <section id="tab-earn" class="tab-content space-y-4">
       <div>
         <h2 class="text-xl font-black text-slate-800">Earn Rewards</h2>
         <p class="text-xs text-slate-400">Complete tasks and collect GD rewards</p>
       </div>
 
-      <!-- TASK CATEGORY SUB-TABS -->
       <div class="bg-white p-1 rounded-2xl border border-slate-200/70 flex gap-1 shadow-sm">
         <button id="subtab-btn-telegram" onclick="switchSubTab('telegram')" class="flex-1 py-2 rounded-xl text-xs font-bold bg-sky-400 text-white transition">
           ✈️ Telegram
@@ -199,13 +171,10 @@
         </button>
       </div>
 
-      <!-- TELEGRAM TASKS -->
       <div id="subtab-telegram" class="subtab-content active space-y-3">
         <div class="bg-white rounded-2xl p-4 border border-slate-100 shadow-sm flex items-center justify-between">
           <div class="flex items-center gap-3">
-            <div class="w-11 h-11 rounded-2xl bg-sky-100 text-sky-500 flex items-center justify-center text-xl">
-              📢
-            </div>
+            <div class="w-11 h-11 rounded-2xl bg-sky-100 text-sky-500 flex items-center justify-center text-xl">📢</div>
             <div>
               <h3 class="font-bold text-slate-800 text-xs">Official Channel</h3>
               <p class="text-[11px] text-emerald-500 font-bold">+200 GD · Verified</p>
@@ -215,62 +184,14 @@
             Start
           </button>
         </div>
-
-        <div class="bg-white rounded-2xl p-4 border border-slate-100 shadow-sm flex items-center justify-between">
-          <div class="flex items-center gap-3">
-            <div class="w-11 h-11 rounded-2xl bg-sky-100 text-sky-500 flex items-center justify-center text-xl">
-              💬
-            </div>
-            <div>
-              <h3 class="font-bold text-slate-800 text-xs">Community Group</h3>
-              <p class="text-[11px] text-emerald-500 font-bold">+150 GD · Verified</p>
-            </div>
-          </div>
-          <button id="taskBtnTgGroup" onclick="completeTask('TgGroup', 'https://t.me/Crypto_Income_BD', 150)" class="px-4 py-2 rounded-xl bg-sky-400 text-white text-xs font-bold btn-action">
-            Start
-          </button>
-        </div>
       </div>
 
-      <!-- SOCIAL TASKS -->
       <div id="subtab-social" class="subtab-content space-y-3">
         <div class="bg-white rounded-2xl p-4 border border-slate-100 shadow-sm flex items-center justify-between">
           <div class="flex items-center gap-3">
-            <div class="w-11 h-11 rounded-2xl bg-blue-100 text-blue-600 flex items-center justify-center text-xl">
-              👍
-            </div>
+            <div class="w-11 h-11 rounded-2xl bg-red-100 text-red-500 flex items-center justify-center text-xl">📺</div>
             <div>
-              <h3 class="font-bold text-slate-800 text-xs">Facebook Page Like</h3>
-              <p class="text-[11px] text-emerald-500 font-bold">+100 GD</p>
-            </div>
-          </div>
-          <button id="taskBtnFb" onclick="completeTask('Fb', 'https://facebook.com', 100)" class="px-4 py-2 rounded-xl bg-sky-400 text-white text-xs font-bold btn-action">
-            Start
-          </button>
-        </div>
-
-        <div class="bg-white rounded-2xl p-4 border border-slate-100 shadow-sm flex items-center justify-between">
-          <div class="flex items-center gap-3">
-            <div class="w-11 h-11 rounded-2xl bg-slate-100 text-slate-800 flex items-center justify-center text-xl">
-              🐦
-            </div>
-            <div>
-              <h3 class="font-bold text-slate-800 text-xs">Twitter (X) Follow</h3>
-              <p class="text-[11px] text-emerald-500 font-bold">+100 GD</p>
-            </div>
-          </div>
-          <button id="taskBtnTwitter" onclick="completeTask('Twitter', 'https://twitter.com', 100)" class="px-4 py-2 rounded-xl bg-sky-400 text-white text-xs font-bold btn-action">
-            Start
-          </button>
-        </div>
-
-        <div class="bg-white rounded-2xl p-4 border border-slate-100 shadow-sm flex items-center justify-between">
-          <div class="flex items-center gap-3">
-            <div class="w-11 h-11 rounded-2xl bg-red-100 text-red-500 flex items-center justify-center text-xl">
-              📺
-            </div>
-            <div>
-              <h3 class="font-bold text-slate-800 text-xs">YouTube Channel Subscribe</h3>
+              <h3 class="font-bold text-slate-800 text-xs">YouTube Channel</h3>
               <p class="text-[11px] text-emerald-500 font-bold">+150 GD</p>
             </div>
           </div>
@@ -281,14 +202,105 @@
       </div>
     </section>
 
-    <!-- 3. PROFILE TAB (MATCHING YOUR EXACT SCREENSHOT DESIGN) -->
+    <!-- 3. INVITE TAB (EXACT DESIGN + TOP 20 LEADERBOARD) -->
+    <section id="tab-invite" class="tab-content space-y-5">
+      <!-- HEADER ILLUSTRATION & TITLE -->
+      <div class="text-center space-y-2 pt-2">
+        <div class="relative w-20 h-20 mx-auto flex items-center justify-center">
+          <div class="w-16 h-16 bg-sky-100 text-sky-500 rounded-full flex items-center justify-center text-3xl shadow-sm">
+            👥
+          </div>
+          <div class="absolute -top-1 -right-1 w-7 h-7 bg-sky-400 rounded-full flex items-center justify-center text-white text-xs font-bold border-2 border-white shadow">
+            ◆
+          </div>
+          <div class="absolute -bottom-1 -left-1 w-6 h-6 bg-sky-400 rounded-full flex items-center justify-center text-white text-[10px] font-bold border-2 border-white shadow">
+            ◆
+          </div>
+        </div>
+        <h2 class="text-2xl font-black text-slate-900 tracking-tight">Earn from every friend</h2>
+        <p class="text-xs text-slate-400 font-medium">+ 10% of everything they earn, forever</p>
+      </div>
+
+      <!-- REWARD CARDS -->
+      <div class="space-y-2.5">
+        <div class="bg-slate-50 border border-slate-200/70 rounded-2xl p-3.5 flex items-center justify-between shadow-sm">
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-xl bg-emerald-500 text-white flex items-center justify-center text-lg shadow-sm">
+              ⚡
+            </div>
+            <div>
+              <p class="text-xs font-bold text-slate-800">Friend watches 2</p>
+              <p class="text-xs font-bold text-slate-800">Adsgram ads</p>
+            </div>
+          </div>
+          <span class="text-xs font-black text-emerald-600">+2,000 GD</span>
+        </div>
+
+        <div class="bg-slate-50 border border-slate-200/70 rounded-2xl p-3.5 flex items-center justify-between shadow-sm">
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-xl bg-purple-500 text-white flex items-center justify-center text-lg shadow-sm">
+              ☧
+            </div>
+            <p class="text-xs font-bold text-slate-800">Of everything they earn</p>
+          </div>
+          <span class="text-xs font-black text-emerald-600">+7%</span>
+        </div>
+      </div>
+
+      <!-- REFERRAL LINK BOX (GramWalletPay_Bot) -->
+      <div class="border-2 border-dashed border-sky-300 bg-sky-50/50 rounded-2xl p-2.5 flex items-center justify-between gap-2">
+        <span id="refLinkText" class="text-xs font-medium text-sky-600 truncate pl-2">
+          https://t.me/GramWalletPay_Bot/app?startapp=ref_6190416164
+        </span>
+        <button onclick="copyRefLink()" class="p-2.5 bg-sky-200/80 hover:bg-sky-300 text-sky-700 rounded-xl transition active:scale-95 flex-shrink-0">
+          📋
+        </button>
+      </div>
+
+      <!-- SHARE BUTTON -->
+      <button onclick="shareOnTelegram()" class="w-full py-4 bg-sky-400 text-white font-extrabold text-sm rounded-2xl shadow-lg shadow-sky-400/30 flex items-center justify-center gap-2 btn-action">
+        ✈️ Share on Telegram
+      </button>
+
+      <!-- USER FAKE RANK SUMMARY CARD -->
+      <div class="bg-gradient-to-r from-slate-900 to-slate-800 text-white rounded-2xl p-4 flex items-center justify-between shadow-md">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-xl bg-amber-400 text-slate-900 font-black flex items-center justify-center text-sm shadow">
+            #42
+          </div>
+          <div>
+            <h4 class="text-xs font-bold text-slate-200">Your Leaderboard Rank</h4>
+            <p class="text-[11px] text-slate-400">12 Friends Invited</p>
+          </div>
+        </div>
+        <div class="text-right">
+          <span class="text-xs font-black text-emerald-400">+24,000 GD</span>
+          <p class="text-[10px] text-slate-400">Total Ref Rewards</p>
+        </div>
+      </div>
+
+      <!-- TOP 20 REFERRAL LEADERBOARD -->
+      <div class="space-y-3 pt-2">
+        <div class="flex justify-between items-center px-1">
+          <h3 class="text-xs font-extrabold text-slate-800 uppercase tracking-wider flex items-center gap-1.5">
+            🏆 Top 20 Referral Champions
+          </h3>
+          <span class="text-[10px] font-bold text-slate-400">Updated Live</span>
+        </div>
+
+        <div id="leaderboardList" class="bg-white border border-slate-100 rounded-2xl divide-y divide-slate-100 shadow-sm overflow-hidden">
+          <!-- Dynamically populated by JS -->
+        </div>
+      </div>
+    </section>
+
+    <!-- 4. PROFILE TAB -->
     <section id="tab-profile" class="tab-content space-y-4">
       <div>
         <h2 class="text-2xl font-black text-slate-900">Profile</h2>
         <p class="text-xs text-slate-400">Your account & withdrawals</p>
       </div>
 
-      <!-- BLUE PROFILE CARD (SCREENSHOT EXACT LAYOUT) -->
       <div class="bg-brand-blue rounded-3xl p-5 text-white shadow-lg relative overflow-hidden">
         <div class="flex items-center justify-between mb-4">
           <div class="flex items-center gap-3">
@@ -301,45 +313,31 @@
               <p id="profileUserId" class="text-[11px] opacity-80 font-mono">ID 6190416164</p>
             </div>
           </div>
-          <!-- Calendar/Wallet Icon -->
-          <div class="w-9 h-9 rounded-xl bg-white/10 flex items-center justify-center text-white border border-white/20">
-            📅
-          </div>
+          <div class="w-9 h-9 rounded-xl bg-white/10 flex items-center justify-center text-white border border-white/20">📅</div>
         </div>
 
         <p class="text-[10px] font-bold uppercase tracking-wider opacity-80">AVAILABLE BALANCE</p>
         <div class="flex items-center gap-2 mt-1">
-          <div class="w-6 h-6 rounded-full bg-white text-brand-blue font-black flex items-center justify-center text-xs">
-            ◆
-          </div>
+          <div class="w-6 h-6 rounded-full bg-white text-brand-blue font-black flex items-center justify-center text-xs">◆</div>
           <span id="profileCardBalance" class="text-2xl font-black">0</span>
           <span class="text-xs font-bold opacity-90">GD</span>
         </div>
         <p id="profileCardUsd" class="text-xs opacity-80 mt-0.5">≈ $0.000</p>
       </div>
 
-      <!-- WITHDRAW LOCK / UNLOCK CARD -->
+      <!-- WITHDRAWAL CONTAINER -->
       <div class="bg-white rounded-3xl p-5 border border-slate-100 shadow-sm space-y-4">
         <div class="flex justify-between items-center">
           <h3 class="font-bold text-slate-800 text-sm">Withdraw</h3>
-          <span id="lockBadge" class="text-[11px] font-bold bg-red-50 text-red-500 px-3 py-1 rounded-full flex items-center gap-1 border border-red-100">
-            🔒 Locked
-          </span>
+          <span id="lockBadge" class="text-[11px] font-bold bg-red-50 text-red-500 px-3 py-1 rounded-full border border-red-100">🔒 Locked</span>
         </div>
 
-        <!-- LOCKED VIEW (When balance < 10,000 GD) -->
         <div id="lockedView" class="text-center py-2 space-y-3">
-          <div class="w-12 h-12 bg-amber-50 text-amber-500 rounded-2xl mx-auto flex items-center justify-center text-2xl">
-            🔒
-          </div>
+          <div class="w-12 h-12 bg-amber-50 text-amber-500 rounded-2xl mx-auto flex items-center justify-center text-2xl">🔒</div>
           <div>
             <h4 class="font-bold text-slate-800 text-sm">Minimum withdrawal is <span class="text-amber-500">10,000 GD</span></h4>
-            <p class="text-[11px] text-slate-400 mt-1 max-w-xs mx-auto leading-relaxed">
-              Please make sure you have enough balance to withdraw. Keep earning and this unlocks automatically.
-            </p>
+            <p class="text-[11px] text-slate-400 mt-1 max-w-xs mx-auto">Please make sure you have enough balance to withdraw.</p>
           </div>
-
-          <!-- PROGRESS BAR -->
           <div class="pt-2">
             <div class="w-full bg-slate-100 h-2.5 rounded-full overflow-hidden">
               <div id="withdrawProgressBar" class="bg-brand-blue h-full transition-all duration-500" style="width: 0%"></div>
@@ -348,42 +346,11 @@
           </div>
         </div>
 
-        <!-- UNLOCKED VIEW (When balance >= 10,000 GD) -->
         <div id="unlockedView" class="space-y-3 hidden">
-          <div>
-            <label class="text-[11px] font-bold text-slate-500 mb-1 block">USDT BEP20 Address</label>
-            <input id="walletInput" type="text" placeholder="Enter wallet address (0x...)" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-3 text-xs text-slate-800 focus:outline-none focus:border-sky-400 font-mono" />
-          </div>
-          <button onclick="handleWithdraw()" class="w-full py-3.5 rounded-2xl bg-sky-400 text-white font-black text-xs btn-action shadow-lg">
-            WITHDRAW FUNDS
-          </button>
+          <input id="walletInput" type="text" placeholder="Enter BEP20 Wallet Address" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-3 text-xs text-slate-800 focus:outline-none" />
+          <button onclick="handleWithdraw()" class="w-full py-3.5 rounded-2xl bg-sky-400 text-white font-black text-xs btn-action">WITHDRAW FUNDS</button>
         </div>
       </div>
-
-      <!-- WITHDRAWAL HISTORY -->
-      <div class="space-y-2">
-        <h4 class="text-xs font-bold text-slate-400 uppercase tracking-wider">WITHDRAWAL HISTORY</h4>
-        <div class="bg-white rounded-3xl p-6 border border-slate-100 shadow-sm text-center space-y-2 border-dashed">
-          <div class="w-10 h-10 rounded-full bg-slate-100 text-slate-400 mx-auto flex items-center justify-center text-lg">
-            🕒
-          </div>
-          <h5 class="font-bold text-slate-800 text-xs">No withdrawals yet</h5>
-          <p class="text-[11px] text-slate-400">Your payouts will show up here</p>
-        </div>
-      </div>
-
-      <!-- SUPPORT BUTTON -->
-      <a href="https://t.me/Crypto_Income_BD" target="_blank" class="bg-white rounded-2xl p-4 border border-slate-100 shadow-sm flex items-center justify-between block active:scale-98 transition">
-        <div class="flex items-center gap-3">
-          <div class="w-9 h-9 rounded-xl bg-emerald-100 text-emerald-500 flex items-center justify-center text-base font-bold">
-            🛡️
-          </div>
-          <span class="font-bold text-slate-800 text-xs">Support</span>
-        </div>
-        <span class="text-slate-300 text-sm">›</span>
-      </a>
-
-      <p class="text-center text-[10px] text-slate-300 font-mono pt-2">Gram Drop v1.2</p>
     </section>
 
   </main>
@@ -399,6 +366,11 @@
       <button data-tab="earn" onclick="switchTab('earn')" class="nav-btn flex flex-col items-center gap-1 text-slate-400">
         <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
         <span class="text-[10px] font-bold">Earn</span>
+      </button>
+
+      <button data-tab="invite" onclick="switchTab('invite')" class="nav-btn flex flex-col items-center gap-1 text-slate-400">
+        <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"/></svg>
+        <span class="text-[10px] font-bold">Invite</span>
       </button>
 
       <button data-tab="profile" onclick="switchTab('profile')" class="nav-btn flex flex-col items-center gap-1 text-slate-400">
@@ -419,6 +391,31 @@
     let completedTasksCount = 0;
     let dailyClaimed = false;
     const MIN_WITHDRAW = 10000;
+    const BOT_USERNAME = "GramWalletPay_Bot";
+
+    // FAKE TOP 20 LEADERBOARD DATA
+    const fakeLeaderboard = [
+      { name: "Crypto King 👑", refs: 4820, earned: "9,640,000 GD" },
+      { name: "Tanzid Bhai 🔥", refs: 3950, earned: "7,900,000 GD" },
+      { name: "Alex Rover", refs: 3120, earned: "6,240,000 GD" },
+      { name: "Suhan Ahmed", refs: 2840, earned: "5,680,000 GD" },
+      { name: "Mahmudul Hasan", refs: 2410, earned: "4,820,000 GD" },
+      { name: "Arik Rahman", refs: 1980, earned: "3,960,000 GD" },
+      { name: "Elena Rostova", refs: 1750, earned: "3,500,000 GD" },
+      { name: "Viktor Vance", refs: 1520, earned: "3,040,000 GD" },
+      { name: "Shakir Khan", refs: 1390, earned: "2,780,000 GD" },
+      { name: "Earning Master BD", refs: 1180, earned: "2,360,000 GD" },
+      { name: "Tanvir Hossain", refs: 980, earned: "1,960,000 GD" },
+      { name: "Naimur Rahman", refs: 870, earned: "1,740,000 GD" },
+      { name: "Crypto Girl", refs: 760, earned: "1,520,000 GD" },
+      { name: "Sabbir Hossain", refs: 690, earned: "1,380,000 GD" },
+      { name: "Faisal Gamer", refs: 540, earned: "1,080,000 GD" },
+      { name: "Imran Hossain", refs: 490, earned: "980,000 GD" },
+      { name: "Rakib Hassan", refs: 410, earned: "820,000 GD" },
+      { name: "Farhan Tanvir", refs: 350, earned: "700,000 GD" },
+      { name: "Ariful Islam", refs: 290, earned: "580,000 GD" },
+      { name: "Mehedi Hasan", refs: 210, earned: "420,000 GD" }
+    ];
 
     const tg = window.Telegram?.WebApp;
     if (tg) {
@@ -432,42 +429,65 @@
         loadingScreen.style.opacity = '0';
         loadingScreen.style.transition = 'opacity 0.4s ease';
         setTimeout(() => loadingScreen.style.display = 'none', 400);
-      }, 1600);
+      }, 1200);
 
       loadUserData();
+      renderLeaderboard();
       updateUI();
     });
 
     function loadUserData() {
       const user = tg?.initDataUnsafe?.user;
-      if (user) {
-        const fullName = user.first_name + (user.last_name ? ' ' + user.last_name : '');
-        document.getElementById('headerUserName').textContent = user.first_name;
-        document.getElementById('profileFullName').textContent = fullName;
-        document.getElementById('profileUserId').textContent = 'ID ' + user.id;
+      const userId = user?.id || "6190416164";
+      const userName = user?.first_name || "ZIHAD";
+      
+      document.getElementById('headerUserName').textContent = userName;
+      document.getElementById('profileFullName').textContent = user ? (user.first_name + (user.last_name ? ' ' + user.last_name : '')) : "ZIHAD";
+      document.getElementById('profileUserId').textContent = 'ID ' + userId;
 
-        if (user.photo_url) {
-          const avatarEl = document.getElementById('headerAvatar');
-          avatarEl.src = user.photo_url;
-          avatarEl.classList.remove('hidden');
-          document.getElementById('headerAvatarFallback').classList.add('hidden');
+      const refUrl = `https://t.me/${BOT_USERNAME}/app?startapp=ref_${userId}`;
+      document.getElementById('refLinkText').textContent = refUrl;
 
-          const profileAvatarEl = document.getElementById('profileCardAvatar');
-          profileAvatarEl.src = user.photo_url;
-          profileAvatarEl.classList.remove('hidden');
-          document.getElementById('profileCardAvatarFallback').classList.add('hidden');
-        }
-      } else {
-        document.getElementById('headerUserName').textContent = 'ZIHAD';
-        document.getElementById('profileFullName').textContent = 'ZIHAD';
-        document.getElementById('profileUserId').textContent = 'ID 6190416164';
+      if (user?.photo_url) {
+        document.getElementById('headerAvatar').src = user.photo_url;
+        document.getElementById('headerAvatar').classList.remove('hidden');
+        document.getElementById('headerAvatarFallback').classList.add('hidden');
+
+        document.getElementById('profileCardAvatar').src = user.photo_url;
+        document.getElementById('profileCardAvatar').classList.remove('hidden');
+        document.getElementById('profileCardAvatarFallback').classList.add('hidden');
       }
     }
 
+    function renderLeaderboard() {
+      const container = document.getElementById('leaderboardList');
+      container.innerHTML = fakeLeaderboard.map((item, index) => {
+        let badgeColor = "bg-slate-100 text-slate-500";
+        if (index === 0) badgeColor = "bg-amber-100 text-amber-600 font-black";
+        if (index === 1) badgeColor = "bg-slate-200 text-slate-700 font-black";
+        if (index === 2) badgeColor = "bg-orange-100 text-orange-600 font-black";
+
+        return `
+          <div class="p-3 flex items-center justify-between hover:bg-slate-50/80 transition">
+            <div class="flex items-center gap-3">
+              <span class="w-7 h-7 rounded-full ${badgeColor} text-[11px] flex items-center justify-center font-bold">
+                ${index + 1}
+              </span>
+              <div>
+                <p class="text-xs font-bold text-slate-800">${item.name}</p>
+                <p class="text-[10px] text-slate-400">${item.refs.toLocaleString()} Friends</p>
+              </div>
+            </div>
+            <span class="text-xs font-extrabold text-emerald-600">${item.earned}</span>
+          </div>
+        `;
+      }).join('');
+    }
+
     function updateUI() {
-      document.getElementById('headerBalance').textContent = balance;
-      document.getElementById('homeBalance').textContent = balance;
-      document.getElementById('profileCardBalance').textContent = balance;
+      document.getElementById('headerBalance').textContent = balance.toLocaleString();
+      document.getElementById('homeBalance').textContent = balance.toLocaleString();
+      document.getElementById('profileCardBalance').textContent = balance.toLocaleString();
       
       const usdVal = (balance * 0.0001).toFixed(3);
       document.getElementById('usdBalance').textContent = `≈ $${usdVal}`;
@@ -476,7 +496,6 @@
       document.getElementById('statEarned').textContent = earnedToday;
       document.getElementById('statTasks').textContent = completedTasksCount;
 
-      // Update Withdrawal Lock/Progress Logic
       const progressPercent = Math.min(100, (balance / MIN_WITHDRAW) * 100);
       document.getElementById('withdrawProgressBar').style.width = progressPercent + '%';
       
@@ -559,10 +578,28 @@
       }, 3000);
     }
 
+    function copyRefLink() {
+      const link = document.getElementById('refLinkText').textContent.trim();
+      navigator.clipboard.writeText(link);
+      showToast('📋 Referral Link Copied!');
+    }
+
+    function shareOnTelegram() {
+      const link = document.getElementById('refLinkText').textContent.trim();
+      const text = encodeURIComponent("🚀 Join Gram Drop Mini App and earn free GD tokens instantly!");
+      const shareUrl = `https://t.me/share/url?url=${encodeURIComponent(link)}&text=${text}`;
+      
+      if (tg && tg.openTelegramLink) {
+        tg.openTelegramLink(shareUrl);
+      } else {
+        window.open(shareUrl, '_blank');
+      }
+    }
+
     function handleWithdraw() {
       const wallet = document.getElementById('walletInput').value.trim();
       if (!wallet) {
-        showToast('❌ Please enter a valid BEP20 Wallet Address');
+        showToast('❌ Enter BEP20 Wallet Address');
         return;
       }
       balance -= MIN_WITHDRAW;
