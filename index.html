@@ -168,8 +168,8 @@
               1
             </div>
             <div>
-              <h4 class="font-bold text-slate-800 text-sm">Watch ads</h4>
-              <p class="text-xs text-slate-400 mt-0.5 leading-relaxed">Every ad adds GD to your balance instantly</p>
+              <h4 class="font-bold text-slate-800 text-sm">Complete tasks</h4>
+              <p class="text-xs text-slate-400 mt-0.5 leading-relaxed">Every task adds GD to your balance instantly</p>
             </div>
           </div>
 
@@ -191,7 +191,7 @@
             </div>
             <div>
               <h4 class="font-bold text-slate-800 text-sm">Invite friends</h4>
-              <p class="text-xs text-slate-400 mt-0.5 leading-relaxed">+2,000 GD when a friend watches 2 Adsgram ads in Earn › Ads · +7% forever</p>
+              <p class="text-xs text-slate-400 mt-0.5 leading-relaxed">+2,000 GD when a friend completes tasks in Earn section · +7% forever</p>
             </div>
           </div>
 
@@ -202,7 +202,7 @@
             </div>
             <div>
               <h4 class="font-bold text-slate-800 text-sm">Withdraw</h4>
-              <p class="text-xs text-slate-400 mt-0.5 leading-relaxed">Cash out in USDT BEP20 or GRAM</p>
+              <p class="text-xs text-slate-400 mt-0.5 leading-relaxed">Cash out directly in GRAM token</p>
             </div>
           </div>
         </div>
@@ -281,8 +281,8 @@
               ⚡
             </div>
             <div>
-              <p class="text-xs font-bold text-slate-800">Friend watches 2</p>
-              <p class="text-xs font-bold text-slate-800">Adsgram ads</p>
+              <p class="text-xs font-bold text-slate-800">Friend completes 2</p>
+              <p class="text-xs font-bold text-slate-800">Tasks in Earn section</p>
             </div>
           </div>
           <span class="text-xs font-black text-emerald-600">+2,000 GD</span>
@@ -360,7 +360,7 @@
       <!-- WITHDRAWAL CONTAINER -->
       <div class="bg-white rounded-3xl p-5 border border-slate-100 shadow-sm space-y-4">
         <div class="flex justify-between items-center">
-          <h3 class="font-bold text-slate-800 text-sm">Withdraw</h3>
+          <h3 class="font-bold text-slate-800 text-sm">Withdraw GRAM Token</h3>
           <span id="lockBadge" class="text-[11px] font-bold bg-red-50 text-red-500 px-3 py-1 rounded-full border border-red-100">🔒 Locked</span>
         </div>
 
@@ -379,8 +379,8 @@
         </div>
 
         <div id="unlockedView" class="space-y-3 hidden">
-          <input id="walletInput" type="text" placeholder="Enter BEP20 Wallet Address" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-3 text-xs text-slate-800 focus:outline-none focus:border-brand-blue" />
-          <button onclick="handleWithdraw()" class="w-full py-3.5 rounded-2xl bg-sky-400 text-white font-black text-xs btn-action">WITHDRAW FUNDS</button>
+          <input id="walletInput" type="text" placeholder="Enter GRAM Wallet Address" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-3 text-xs text-slate-800 focus:outline-none focus:border-brand-blue" />
+          <button onclick="handleWithdraw()" class="w-full py-3.5 rounded-2xl bg-sky-400 text-white font-black text-xs btn-action">WITHDRAW GRAM</button>
         </div>
       </div>
 
@@ -433,11 +433,10 @@
   <script>
     let balance = 0;
     let dailyClaimed = false;
-    let userTransactions = []; // REAL TRANSACTIONS ARRAY
+    let userTransactions = [];
     const MIN_WITHDRAW = 10000;
     const BOT_USERNAME = "GramWalletPay_Bot";
 
-    // FAKE TOP 20 LEADERBOARD ("Jerome 🔥" AT FIRST PLACE)
     const fakeLeaderboard = [
       { name: "Jerome 🔥", refs: 4920, earned: "9,840,000 GD" },
       { name: "Alex Rover 🚀", refs: 3850, earned: "7,700,000 GD" },
@@ -546,7 +545,7 @@
             <span class="w-2.5 h-2.5 rounded-full ${tx.status === 'Pending' ? 'bg-amber-400 animate-pulse' : 'bg-emerald-500'}"></span>
             <div>
               <p class="font-bold text-slate-800">${tx.amount.toLocaleString()} GD (${tx.status})</p>
-              <p class="text-[10px] text-slate-400 font-mono">BEP20: ${tx.address.substring(0,6)}...${tx.address.slice(-4)}</p>
+              <p class="text-[10px] text-slate-400 font-mono">GRAM: ${tx.address.substring(0,6)}...${tx.address.slice(-4)}</p>
             </div>
           </div>
           <span class="text-[10px] text-slate-400 font-medium">${tx.date}</span>
@@ -667,14 +666,13 @@
     function handleWithdraw() {
       const wallet = document.getElementById('walletInput').value.trim();
       if (!wallet) {
-        showToast('❌ Enter BEP20 Wallet Address');
+        showToast('❌ Enter GRAM Wallet Address');
         return;
       }
       
       const withdrawAmount = MIN_WITHDRAW;
       balance -= withdrawAmount;
 
-      // Add REAL record to transaction history
       const now = new Date();
       const dateStr = now.toISOString().split('T')[0];
       
