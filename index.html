@@ -58,7 +58,6 @@
   <!-- INITIAL LOADING SCREEN -->
   <div id="loadingScreen" class="fixed inset-0 bg-white z-50 flex flex-col items-center justify-center space-y-4">
     <div class="w-24 h-24 bg-brand-lightBlue rounded-3xl flex items-center justify-center loading-logo border border-brand-blue/20 shadow-xl shadow-sky-500/10">
-      <!-- GRAM TOKEN CRYSTAL LOGO -->
       <svg class="w-14 h-14 text-brand-blue" viewBox="0 0 24 24" fill="currentColor">
         <path d="M12 2L3 9L12 22L21 9L12 2Z" fill="#0098EA"/>
         <path d="M12 2L3 9H21L12 2Z" fill="#38BDF8"/>
@@ -139,48 +138,20 @@
         </button>
       </div>
 
-      <!-- UPCOMING ECOSYSTEM FEATURES (IN PLACE OF STATS BOXES) -->
-      <div class="space-y-3 pt-1">
-        <div class="flex items-center justify-between">
-          <h3 class="text-xs font-black text-slate-800 uppercase tracking-wider flex items-center gap-1.5">
-            🚀 Ecosystem Features
-          </h3>
-          <span class="text-[10px] font-extrabold bg-sky-100 text-sky-600 px-2 py-0.5 rounded-full">Upcoming</span>
-        </div>
-
-        <div class="grid grid-cols-2 gap-3">
-          <div class="bg-white p-3.5 rounded-2xl border border-slate-100 shadow-sm space-y-1.5">
-            <div class="w-8 h-8 rounded-xl bg-purple-100 text-purple-600 flex items-center justify-center text-base">
-              💎
-            </div>
-            <h4 class="text-xs font-bold text-slate-800">Gram Staking</h4>
-            <p class="text-[10px] text-slate-400 leading-tight">Stake GD tokens to earn up to +15% APY rewards daily.</p>
+      <!-- REDEEM CODE CARD (BONUS STYLE BUTTON - COMING SOON) -->
+      <div class="bg-white rounded-2xl p-4 border border-slate-100 shadow-sm flex items-center justify-between">
+        <div class="flex items-center gap-3">
+          <div class="w-11 h-11 rounded-2xl bg-purple-100 text-purple-600 flex items-center justify-center text-xl shadow-inner">
+            🎟️
           </div>
-
-          <div class="bg-white p-3.5 rounded-2xl border border-slate-100 shadow-sm space-y-1.5">
-            <div class="w-8 h-8 rounded-xl bg-emerald-100 text-emerald-600 flex items-center justify-center text-base">
-              🔄
-            </div>
-            <h4 class="text-xs font-bold text-slate-800">Instant Swap</h4>
-            <p class="text-[10px] text-slate-400 leading-tight">Swap GD tokens directly to TON or USDT instantly.</p>
-          </div>
-
-          <div class="bg-white p-3.5 rounded-2xl border border-slate-100 shadow-sm space-y-1.5">
-            <div class="w-8 h-8 rounded-xl bg-amber-100 text-amber-600 flex items-center justify-center text-base">
-              🎮
-            </div>
-            <h4 class="text-xs font-bold text-slate-800">Play & Earn</h4>
-            <p class="text-[10px] text-slate-400 leading-tight">Play mini games and challenge friends for high reward pools.</p>
-          </div>
-
-          <div class="bg-white p-3.5 rounded-2xl border border-slate-100 shadow-sm space-y-1.5">
-            <div class="w-8 h-8 rounded-xl bg-rose-100 text-rose-600 flex items-center justify-center text-base">
-              🌐
-            </div>
-            <h4 class="text-xs font-bold text-slate-800">Airdrop Hub</h4>
-            <p class="text-[10px] text-slate-400 leading-tight">Participate in partner crypto airdrops seamlessly.</p>
+          <div>
+            <h3 class="font-bold text-slate-800 text-xs">Redeem Code</h3>
+            <p class="text-[11px] text-slate-400">Enter code to claim rewards</p>
           </div>
         </div>
+        <button onclick="showComingSoon()" class="px-4 py-2 rounded-xl bg-purple-500 text-white text-xs font-bold shadow-md shadow-purple-500/20 active:scale-95 transition">
+          Redeem
+        </button>
       </div>
     </section>
 
@@ -290,13 +261,27 @@
       <button onclick="shareOnTelegram()" class="w-full py-4 bg-sky-400 text-white font-extrabold text-sm rounded-2xl shadow-lg shadow-sky-400/30 flex items-center justify-center gap-2 btn-action">
         ✈️ Share on Telegram
       </button>
+
+      <!-- TOP 20 LEADERBOARD (MIXED BANGLADESHI & FOREIGN) -->
+      <div class="space-y-3 pt-2">
+        <div class="flex justify-between items-center px-1">
+          <h3 class="text-xs font-extrabold text-slate-800 uppercase tracking-wider flex items-center gap-1.5">
+            🏆 Top Referral Champions
+          </h3>
+          <span class="text-[10px] font-bold text-slate-400">Live Ranking</span>
+        </div>
+
+        <div id="leaderboardList" class="bg-white border border-slate-100 rounded-2xl divide-y divide-slate-100 shadow-sm overflow-hidden">
+          <!-- Populated by JS -->
+        </div>
+      </div>
     </section>
 
-    <!-- 4. PROFILE TAB -->
+    <!-- 4. PROFILE / WITHDRAW TAB -->
     <section id="tab-profile" class="tab-content space-y-4">
       <div>
-        <h2 class="text-2xl font-black text-slate-900">Profile</h2>
-        <p class="text-xs text-slate-400">Your account & withdrawals</p>
+        <h2 class="text-2xl font-black text-slate-900">Profile & Wallet</h2>
+        <p class="text-xs text-slate-400">Manage earnings and cash out</p>
       </div>
 
       <div class="bg-brand-blue rounded-3xl p-5 text-white shadow-lg relative overflow-hidden">
@@ -311,7 +296,7 @@
               <p id="profileUserId" class="text-[11px] opacity-80 font-mono">ID 6190416164</p>
             </div>
           </div>
-          <div class="w-9 h-9 rounded-xl bg-white/10 flex items-center justify-center text-white border border-white/20">📅</div>
+          <div class="w-9 h-9 rounded-xl bg-white/10 flex items-center justify-center text-white border border-white/20">💳</div>
         </div>
 
         <p class="text-[10px] font-bold uppercase tracking-wider opacity-80">AVAILABLE BALANCE</p>
@@ -334,7 +319,7 @@
           <div class="w-12 h-12 bg-amber-50 text-amber-500 rounded-2xl mx-auto flex items-center justify-center text-2xl">🔒</div>
           <div>
             <h4 class="font-bold text-slate-800 text-sm">Minimum withdrawal is <span class="text-amber-500">10,000 GD</span></h4>
-            <p class="text-[11px] text-slate-400 mt-1 max-w-xs mx-auto">Please make sure you have enough balance to withdraw.</p>
+            <p class="text-[11px] text-slate-400 mt-1 max-w-xs mx-auto">Complete tasks and invite friends to hit payout target.</p>
           </div>
           <div class="pt-2">
             <div class="w-full bg-slate-100 h-2.5 rounded-full overflow-hidden">
@@ -345,10 +330,43 @@
         </div>
 
         <div id="unlockedView" class="space-y-3 hidden">
-          <input id="walletInput" type="text" placeholder="Enter BEP20 Wallet Address" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-3 text-xs text-slate-800 focus:outline-none" />
+          <input id="walletInput" type="text" placeholder="Enter BEP20 Wallet Address" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-3 text-xs text-slate-800 focus:outline-none focus:border-brand-blue" />
           <button onclick="handleWithdraw()" class="w-full py-3.5 rounded-2xl bg-sky-400 text-white font-black text-xs btn-action">WITHDRAW FUNDS</button>
         </div>
       </div>
+
+      <!-- RECENT TRANSACTION HISTORY (ORIGINAL RESTORED) -->
+      <div class="bg-white rounded-3xl p-5 border border-slate-100 shadow-sm space-y-3">
+        <h3 class="font-bold text-slate-800 text-sm">Recent Transactions</h3>
+        <div class="space-y-2.5 text-xs">
+          <div class="flex items-center justify-between p-2.5 bg-slate-50 rounded-xl">
+            <div class="flex items-center gap-2.5">
+              <span class="w-2 h-2 rounded-full bg-amber-400"></span>
+              <div>
+                <p class="font-bold text-slate-800">10,000 GD (Pending)</p>
+                <p class="text-[10px] text-slate-400">BEP20: 0x71C...49b2</p>
+              </div>
+            </div>
+            <span class="text-[10px] text-slate-400 font-medium">2026-04-12</span>
+          </div>
+
+          <div class="flex items-center justify-between p-2.5 bg-slate-50 rounded-xl">
+            <div class="flex items-center gap-2.5">
+              <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+              <div>
+                <p class="font-bold text-slate-800">15,000 GD (Paid)</p>
+                <p class="text-[10px] text-slate-400">BEP20: 0x3A2...91c0</p>
+              </div>
+            </div>
+            <span class="text-[10px] text-slate-400 font-medium">2026-03-28</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- LIVE SUPPORT LINK BUTTON -->
+      <a href="https://t.me/Crypto_Income_BD" target="_blank" class="w-full py-3 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs rounded-2xl flex items-center justify-center gap-2 transition">
+        💬 Telegram Live Support
+      </a>
     </section>
 
   </main>
@@ -385,11 +403,33 @@
 
   <script>
     let balance = 0;
-    let earnedToday = 0;
-    let completedTasksCount = 0;
     let dailyClaimed = false;
     const MIN_WITHDRAW = 10000;
     const BOT_USERNAME = "GramWalletPay_Bot";
+
+    // FAKE TOP 20 LEADERBOARD (MIXED BANGLADESHI & INTERNATIONAL)
+    const fakeLeaderboard = [
+      { name: "Tanzid Bhai 🔥", refs: 4920, earned: "9,840,000 GD" },
+      { name: "Alex Rover 🚀", refs: 3850, earned: "7,700,000 GD" },
+      { name: "Naimur Rahman", refs: 3120, earned: "6,240,000 GD" },
+      { name: "Elena Rostova", refs: 2840, earned: "5,680,000 GD" },
+      { name: "Sabbir Hossain", refs: 2410, earned: "4,820,000 GD" },
+      { name: "Viktor Vance", refs: 1980, earned: "3,960,000 GD" },
+      { name: "Tanvir Hossain BD", refs: 1750, earned: "3,500,000 GD" },
+      { name: "Michael Chang", refs: 1520, earned: "3,040,000 GD" },
+      { name: "Earning Master BD", refs: 1390, earned: "2,780,000 GD" },
+      { name: "Sophia Martinez", refs: 1180, earned: "2,360,000 GD" },
+      { name: "Faisal Gamer", refs: 980, earned: "1,960,000 GD" },
+      { name: "David Miller", refs: 870, earned: "1,740,000 GD" },
+      { name: "Imran Hossain", refs: 760, earned: "1,520,000 GD" },
+      { name: "Crypto Girl 💎", refs: 690, earned: "1,380,000 GD" },
+      { name: "Ariful Islam", refs: 540, earned: "1,080,000 GD" },
+      { name: "Lucas Silva", refs: 490, earned: "980,000 GD" },
+      { name: "Rakib Hassan", refs: 410, earned: "820,000 GD" },
+      { name: "Emma Watson", refs: 350, earned: "700,000 GD" },
+      { name: "Mehedi Hasan", refs: 290, earned: "580,000 GD" },
+      { name: "Oliver Queen", refs: 210, earned: "420,000 GD" }
+    ];
 
     const tg = window.Telegram?.WebApp;
     if (tg) {
@@ -406,6 +446,7 @@
       }, 1200);
 
       loadUserData();
+      renderLeaderboard();
       updateUI();
     });
 
@@ -430,6 +471,31 @@
         document.getElementById('profileCardAvatar').classList.remove('hidden');
         document.getElementById('profileCardAvatarFallback').classList.add('hidden');
       }
+    }
+
+    function renderLeaderboard() {
+      const container = document.getElementById('leaderboardList');
+      container.innerHTML = fakeLeaderboard.map((item, index) => {
+        let badgeColor = "bg-slate-100 text-slate-500";
+        if (index === 0) badgeColor = "bg-amber-100 text-amber-600 font-black";
+        if (index === 1) badgeColor = "bg-slate-200 text-slate-700 font-black";
+        if (index === 2) badgeColor = "bg-orange-100 text-orange-600 font-black";
+
+        return `
+          <div class="p-3 flex items-center justify-between hover:bg-slate-50/80 transition">
+            <div class="flex items-center gap-3">
+              <span class="w-7 h-7 rounded-full ${badgeColor} text-[11px] flex items-center justify-center font-bold">
+                ${index + 1}
+              </span>
+              <div>
+                <p class="text-xs font-bold text-slate-800">${item.name}</p>
+                <p class="text-[10px] text-slate-400">${item.refs.toLocaleString()} Friends</p>
+              </div>
+            </div>
+            <span class="text-xs font-extrabold text-emerald-600">${item.earned}</span>
+          </div>
+        `;
+      }).join('');
     }
 
     function updateUI() {
@@ -490,7 +556,6 @@
     function claimDaily() {
       if (dailyClaimed) return;
       balance += 500;
-      earnedToday += 500;
       dailyClaimed = true;
       updateUI();
 
@@ -498,6 +563,10 @@
       btn.textContent = 'Claimed';
       btn.classList.add('opacity-50', 'pointer-events-none');
       showToast('🎁 Claimed +500 GD Daily Bonus!');
+    }
+
+    function showComingSoon() {
+      showToast('⏳ Coming Soon! Stay tuned for codes.');
     }
 
     function completeTask(taskId, url, reward) {
@@ -513,8 +582,6 @@
 
       setTimeout(() => {
         balance += reward;
-        earnedToday += reward;
-        completedTasksCount++;
         updateUI();
 
         btn.textContent = 'Completed';
