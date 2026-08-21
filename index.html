@@ -161,7 +161,7 @@
         <span class="text-sm font-bold text-amber-400"><span id="missionBalance">0.00</span> USDT</span>
       </div>
 
-      <!-- TASK 1 -->
+      <!-- TELEGRAM TASK -->
       <div class="bg-cyber-card border border-cyber-border rounded-2xl p-4 flex items-center justify-between gap-3">
         <div class="flex items-center gap-3">
           <div class="w-10 h-10 rounded-xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-center text-lg">📢</div>
@@ -173,16 +173,52 @@
         <button id="taskChannelBtn" onclick="doChannelTask()" class="px-4 py-2 rounded-xl btn-gold-glow text-black text-xs font-bold">JOIN</button>
       </div>
 
-      <!-- TASK 2 -->
+      <!-- YOUTUBE TASK -->
       <div class="bg-cyber-card border border-cyber-border rounded-2xl p-4 flex items-center justify-between gap-3">
         <div class="flex items-center gap-3">
           <div class="w-10 h-10 rounded-xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-center text-lg">📺</div>
           <div>
-            <h3 class="font-semibold text-white text-xs">Watch Promo Video</h3>
+            <h3 class="font-semibold text-white text-xs">Subscribe YouTube Channel</h3>
             <p class="text-[11px] text-amber-400 font-bold">+3.00 USDT</p>
           </div>
         </div>
-        <button id="taskVideoBtn" onclick="doVideoTask()" class="px-4 py-2 rounded-xl btn-gold-glow text-black text-xs font-bold">WATCH</button>
+        <button id="taskYtBtn" onclick="doYtTask()" class="px-4 py-2 rounded-xl btn-gold-glow text-black text-xs font-bold">WATCH</button>
+      </div>
+
+      <!-- TWITTER TASK -->
+      <div class="bg-cyber-card border border-cyber-border rounded-2xl p-4 flex items-center justify-between gap-3">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-center text-lg">🐦</div>
+          <div>
+            <h3 class="font-semibold text-white text-xs">Follow Twitter (X)</h3>
+            <p class="text-[11px] text-amber-400 font-bold">+2.00 USDT</p>
+          </div>
+        </div>
+        <button id="taskTwitterBtn" onclick="doTwitterTask()" class="px-4 py-2 rounded-xl btn-gold-glow text-black text-xs font-bold">FOLLOW</button>
+      </div>
+
+      <!-- FACEBOOK TASK -->
+      <div class="bg-cyber-card border border-cyber-border rounded-2xl p-4 flex items-center justify-between gap-3">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-center text-lg">👍</div>
+          <div>
+            <h3 class="font-semibold text-white text-xs">Like Facebook Page</h3>
+            <p class="text-[11px] text-amber-400 font-bold">+2.00 USDT</p>
+          </div>
+        </div>
+        <button id="taskFbBtn" onclick="doFbTask()" class="px-4 py-2 rounded-xl btn-gold-glow text-black text-xs font-bold">LIKE</button>
+      </div>
+
+      <!-- INSTAGRAM TASK -->
+      <div class="bg-cyber-card border border-cyber-border rounded-2xl p-4 flex items-center justify-between gap-3">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-center text-lg">📸</div>
+          <div>
+            <h3 class="font-semibold text-white text-xs">Follow Instagram</h3>
+            <p class="text-[11px] text-amber-400 font-bold">+2.00 USDT</p>
+          </div>
+        </div>
+        <button id="taskInstaBtn" onclick="doInstaTask()" class="px-4 py-2 rounded-xl btn-gold-glow text-black text-xs font-bold">FOLLOW</button>
       </div>
     </section>
 
@@ -254,14 +290,24 @@
   </div>
 
   <script>
-    const BOT_USERNAME = 'YourBotUsername'; 
-    const REQUIRED_CHANNEL = 'https://t.me/CryptoIncomeBD'; 
+    const BOT_USERNAME = 'PolzyxBot'; 
+    const REQUIRED_CHANNEL = 'https://t.me/Crypto_Income_BD'; 
+    const YOUTUBE_URL = 'https://youtube.com'; 
+    const TWITTER_URL = 'https://twitter.com'; 
+    const FACEBOOK_URL = 'https://facebook.com'; 
+    const INSTAGRAM_URL = 'https://instagram.com'; 
 
     let balance = 0.00;
     let energy = 10;
     const MIN_WITHDRAW = 25.00;
+    
+    // Task States
     let channelTaskDone = false;
-    let videoTaskDone = false;
+    let ytTaskDone = false;
+    let twitterTaskDone = false;
+    let fbTaskDone = false;
+    let instaTaskDone = false;
+    
     let history = [];
 
     const tg = window.Telegram.WebApp;
@@ -342,6 +388,7 @@
       showToast('Claimed $2.00 USDT!');
     }
 
+    // TASKS LOGIC
     function doChannelTask() {
       if (channelTaskDone) return;
       tg.openTelegramLink(REQUIRED_CHANNEL);
@@ -359,19 +406,68 @@
       }, 4000);
     }
 
-    function doVideoTask() {
-      if (videoTaskDone) return;
-      const btn = document.getElementById('taskVideoBtn');
-      btn.textContent = 'WATCHING...';
+    function doYtTask() {
+      if (ytTaskDone) return;
+      tg.openLink(YOUTUBE_URL);
+      const btn = document.getElementById('taskYtBtn');
+      btn.textContent = 'CHECKING...';
       setTimeout(() => {
         balance += 3.00;
-        videoTaskDone = true;
+        ytTaskDone = true;
         updateBalances();
-        addHistory('Video Task', '+3.00');
+        addHistory('YouTube Task', '+3.00');
         btn.textContent = 'COMPLETED';
         btn.classList.add('btn-disabled');
         showToast('+3.00 USDT Added!');
-      }, 3000);
+      }, 4000);
+    }
+
+    function doTwitterTask() {
+      if (twitterTaskDone) return;
+      tg.openLink(TWITTER_URL);
+      const btn = document.getElementById('taskTwitterBtn');
+      btn.textContent = 'CHECKING...';
+      setTimeout(() => {
+        balance += 2.00;
+        twitterTaskDone = true;
+        updateBalances();
+        addHistory('Twitter Task', '+2.00');
+        btn.textContent = 'COMPLETED';
+        btn.classList.add('btn-disabled');
+        showToast('+2.00 USDT Added!');
+      }, 4000);
+    }
+
+    function doFbTask() {
+      if (fbTaskDone) return;
+      tg.openLink(FACEBOOK_URL);
+      const btn = document.getElementById('taskFbBtn');
+      btn.textContent = 'CHECKING...';
+      setTimeout(() => {
+        balance += 2.00;
+        fbTaskDone = true;
+        updateBalances();
+        addHistory('Facebook Task', '+2.00');
+        btn.textContent = 'COMPLETED';
+        btn.classList.add('btn-disabled');
+        showToast('+2.00 USDT Added!');
+      }, 4000);
+    }
+
+    function doInstaTask() {
+      if (instaTaskDone) return;
+      tg.openLink(INSTAGRAM_URL);
+      const btn = document.getElementById('taskInstaBtn');
+      btn.textContent = 'CHECKING...';
+      setTimeout(() => {
+        balance += 2.00;
+        instaTaskDone = true;
+        updateBalances();
+        addHistory('Instagram Task', '+2.00');
+        btn.textContent = 'COMPLETED';
+        btn.classList.add('btn-disabled');
+        showToast('+2.00 USDT Added!');
+      }, 4000);
     }
 
     function shareRefLink() {
