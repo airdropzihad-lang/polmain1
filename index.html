@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>USDT Vault Mini App</title>
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            gold: {
+              50:  '#fffbeb',
+              100: '#fef3c7',
+              200: '#fde68a',
+              300: '#fcd34d',
+              400: '#fbbf24',
+              500: '#f59e0b',
+              600: '#d97706',
+              700: '#b45309',
+            }
+          },
+          boxShadow: {
+            soft: '0 4px 20px -2px rgba(245, 158, 11, 0.15)',
+            card: '0 8px 30px -4px rgba(245, 158, 11, 0.12)',
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+      background: linear-gradient(180deg, #fffbeb 0%, #fefce8 40%, #f8fafc 100%);
+      min-height: 100vh;
+      overscroll-behavior: none;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .tab-content { display: none; }
+    .tab-content.active { display: block; animation: fadeIn 0.25s ease; }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .nav-item.active {
+      color: #d97706;
+    }
+    .nav-item.active svg {
+      stroke: #d97706;
+    }
+    .gradient-card {
+      background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 50%, #fde68a 100%);
+    }
+    .btn-primary {
+      background: linear-gradient(135deg, #f59e0b, #d97706);
+      box-shadow: 0 4px 14px rgba(217, 119, 6, 0.35);
+    }
+    .btn-primary:active { transform: scale(0.97); }
+    .btn-disabled {
+      background: #e5e7eb !important;
+      color: #9ca3af !important;
+      box-shadow: none !important;
+      pointer-events: none;
+    }
+  </style>
+</head>
+<body class="text-slate-800 pb-24">
+
+  <!-- ===================== HEADER ===================== -->
+  <header class="sticky top-0 z-40 bg-white/80 backdrop-blur-md border-b border-amber-100 px-4 pt-3 pb-3">
+    <div class="flex items-center justify-between max-w-lg mx-auto">
+      <!-- User Info -->
+      <div class="flex items-center gap-3">
+        <div class="relative">
+          <img id="userAvatar" 
+               src="https://via.placeholder.com/48/fbbf24/ffffff?text=U" 
+               alt="Avatar"
+               class="w-12 h-12 rounded-full object-cover border-2 border-amber-300 shadow-sm" />
+          <div class="absolute -bottom-0.5 -right-0.5 w-3.5 h-3.5 bg-green-400 border-2 border-white rounded-full"></div>
+        </div>
+        <div>
+          <h1 id="userName" class="font-semibold text-slate-800 text-[15px] leading-tight">Loading...</h1>
+          <p id="userHandle" class="text-xs text-slate-500">@username</p>
+        </div>
+      </div>
+
+      <!-- Right side -->
+      <div class="flex items-center gap-2">
+        <span class="text-[10px] font-semibold tracking-wide bg-gradient-to-r from-amber-400 to-orange-400 text-white px-2.5 py-1 rounded-full shadow-sm">
+          USDT Network
+        </span>
+        <button id="refreshBtn" class="w-9 h-9 flex items-center justify-center rounded-full bg-amber-50 hover:bg-amber-100 transition active:scale-95">
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-amber-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+          </svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- ===================== MAIN CONTENT ===================== -->
+  <main class="max-w-lg mx-auto px-4 pt-5">
+
+    <!-- ========== VAULT TAB ========== -->
+    <section id="tab-vault" class="tab-content active space-y-4">
+      <!-- Balance Card -->
+      <div class="gradient-card rounded-2xl p-5 shadow-card border border-amber-200/60">
+        <p class="text-xs font-medium text-amber-700/80 uppercase tracking-wider">USDT Balance (BEP-20)</p>
+        <div class="flex items-end gap-1 mt-1">
+          <span id="balanceDisplay" class="text-3xl font-bold text-slate-800">0.00</span>
+          <span class="text-lg font-semibold text-amber-600 mb-0.5">USDT</span>
+        </div>
+        <div class="mt-4 flex gap-2">
+          <button id="historyBtn" class="flex-1 py-2.5 rounded-xl bg-white/70 text-amber-700 text-sm font-semibold border border-amber-200 hover:bg-white transition active:scale-95">
+            History
+          </button>
+        </div>
+      </div>
+
+      <!-- Withdraw Card -->
+      <div class="bg-white rounded-2xl p-5 shadow-soft border border-slate-100">
+        <div class="flex justify-between items-center mb-3">
+          <p class="text-sm font-medium text-slate-600">Available to Withdraw</p>
+          <p class="text-lg font-bold text-slate-800">
+            <span id="withdrawableDisplay">0.00</span> <span class="text-sm text-amber-600">USDT</span>
+          </p>
+        </div>
+
+        <button id="withdrawBtn" class="w-full py-3.5 rounded-xl text-white font-semibold text-sm btn-primary transition">
+          Withdraw USDT
+        </button>
+
+        <p class="text-center text-xs text-slate-400 mt-3">
+          Minimum withdrawal: <span class="font-semibold text-amber-600">$25.00</span>
+        </p>
+      </div>
+    </section>
+
+    <!-- ========== MISSION TAB ========== -->
+    <section id="tab-mission" class="tab-content space-y-4">
+      <!-- Balance strip -->
+      <div class="bg-white rounded-2xl px-4 py-3 shadow-soft border border-slate-100 flex justify-between items-center">
+        <span class="text-sm text-slate-500">Your Balance</span>
+        <span class="font-bold text-amber-600">
+          <span id="missionBalance">0.00</span> USDT
+        </span>
+      </div>
+
+      <!-- Task 1 -->
+      <div class="bg-white rounded-2xl p-4 shadow-soft border border-slate-100 flex items-center gap-4">
+        <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-orange-100 to-amber-200 flex items-center justify-center text-2xl shrink-0">
+          📺
+        </div>
+        <div class="flex-1 min-w-0">
+          <h3 class="font-semibold text-slate-800 text-sm">Watch Ad & Earn</h3>
+          <p class="text-xs text-amber-600 font-medium mt-0.5">+3.00 USDT</p>
+        </div>
+        <button onclick="doTask(3)" class="px-4 py-2 rounded-xl btn-primary text-white text-xs font-bold tracking-wide shrink-0">
+          WATCH
+        </button>
+      </div>
+
+      <!-- Task 2 -->
+      <div class="bg-white rounded-2xl p-4 shadow-soft border border-slate-100 flex items-center gap-4">
+        <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-orange-100 to-amber-200 flex items-center justify-center text-2xl shrink-0">
+          🌐
+        </div>
+        <div class="flex-1 min-w-0">
+          <h3 class="font-semibold text-slate-800 text-sm">Visit Website 15 Second</h3>
+          <p class="text-xs text-amber-600 font-medium mt-0.5">+5.00 USDT</p>
+        </div>
+        <button onclick="doTask(5)" class="px-4 py-2 rounded-xl btn-primary text-white text-xs font-bold tracking-wide shrink-0">
+          GO
+        </button>
+      </div>
+    </section>
+
+    <!-- ========== REFER TAB ========== -->
+    <section id="tab-refer" class="tab-content space-y-4">
+      <!-- Earn per invite -->
+      <div class="gradient-card rounded-2xl p-5 shadow-card border border-amber-200/60 text-center">
+        <p class="text-xs font-medium text-amber-700/80 uppercase tracking-wider">Earn per invite</p>
+        <p class="text-3xl font-bold text-slate-800 mt-1">$4.00 <span class="text-lg text-amber-600">USDT</span></p>
+      </div>
+
+      <!-- Referral Link -->
+      <div class="bg-white rounded-2xl p-4 shadow-soft border border-slate-100">
+        <label class="text-xs font-medium text-slate-500 mb-2 block">Your Referral Link</label>
+        <div class="flex gap-2">
+          <input id="refLink" type="text" readonly
+                 class="flex-1 bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 text-xs text-slate-700 truncate focus:outline-none"
+                 value="https://t.me/YourBotUsername?start=ref_123" />
+        </div>
+        <div class="flex gap-2 mt-3">
+          <button id="copyBtn" class="flex-1 py-2.5 rounded-xl bg-amber-50 text-amber-700 text-sm font-semibold border border-amber-200 hover:bg-amber-100 transition active:scale-95">
+            COPY LINK
+          </button>
+          <button id="shareBtn" class="flex-1 py-2.5 rounded-xl btn-primary text-white text-sm font-semibold transition">
+            SHARE
+          </button>
+        </div>
+      </div>
+
+      <!-- Stats -->
+      <div class="grid grid-cols-2 gap-3">
+        <div class="bg-white rounded-2xl p-4 shadow-soft border border-slate-100 text-center">
+          <p class="text-xs text-slate-500 uppercase tracking-wide">Total Registered</p>
+          <p id="totalRegistered" class="text-2xl font-bold text-slate-800 mt-1">0</p>
+        </div>
+        <div class="bg-white rounded-2xl p-4 shadow-soft border border-slate-100 text-center">
+          <p class="text-xs text-slate-500 uppercase tracking-wide">Referral Bonus</p>
+          <p id="referralBonus" class="text-2xl font-bold text-amber-600 mt-1">0.00</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ===================== BOTTOM NAV ===================== -->
+  <nav class="fixed bottom-0 left-0 right-0 bg-white/90 backdrop-blur-lg border-t border-amber-100 z-50 safe-area-pb">
+    <div class="max-w-lg mx-auto flex justify-around py-2.5">
+      <button data-tab="vault" class="nav-item active flex flex-col items-center gap-0.5 w-20 py-1 transition">
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+        </svg>
+        <span class="text-[11px] font-medium">Vault</span>
+      </button>
+
+      <button data-tab="mission" class="nav-item flex flex-col items-center gap-0.5 w-20 py-1 text-slate-400 transition">
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
+        </svg>
+        <span class="text-[11px] font-medium">Mission</span>
+      </button>
+
+      <button data-tab="refer" class="nav-item flex flex-col items-center gap-0.5 w-20 py-1 text-slate-400 transition">
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+        </svg>
+        <span class="text-[11px] font-medium">Refer</span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- Toast -->
+  <div id="toast" class="fixed top-20 left-1/2 -translate-x-1/2 bg-slate-800 text-white text-sm px-4 py-2.5 rounded-full shadow-lg opacity-0 pointer-events-none transition-all duration-300 z-50 whitespace-nowrap">
+    Copied!
+  </div>
+
+  <script>
+    // ===================== CONFIG =====================
+    // Replace with your real bot username (without @)
+    const BOT_USERNAME = 'YourBotUsername';
+
+    // ===================== STATE =====================
+    let balance = 18.50;          // Demo starting balance
+    let totalRegistered = 3;
+    let referralBonus = 12.00;
+    const MIN_WITHDRAW = 25.00;
+
+    // ===================== TELEGRAM SDK =====================
+    const tg = window.Telegram.WebApp;
+    tg.ready();
+    tg.expand();
+    tg.setHeaderColor('#fffbeb');
+    tg.setBackgroundColor('#fffbeb');
+
+    // Populate user data from Telegram
+    function loadUser() {
+      const user = tg.initDataUnsafe?.user;
+      if (user) {
+        document.getElementById('userName').textContent = 
+          user.first_name + (user.last_name ? ' ' + user.last_name : '');
+        document.getElementById('userHandle').textContent = 
+          user.username ? '@' + user.username : 'ID: ' + user.id;
+        
+        if (user.photo_url) {
+          document.getElementById('userAvatar').src = user.photo_url;
+        }
+
+        // Build real referral link
+        const refLink = `https://t.me/${BOT_USERNAME}?start=ref_${user.id}`;
+        document.getElementById('refLink').value = refLink;
+      } else {
+        // Fallback when opened outside Telegram (for testing)
+        document.getElementById('userName').textContent = 'Demo User';
+        document.getElementById('userHandle').textContent = '@demouser';
+        document.getElementById('refLink').value = `https://t.me/${BOT_USERNAME}?start=ref_demo`;
+      }
+    }
+
+    // ===================== UI HELPERS =====================
+    function updateBalances() {
+      const bal = balance.toFixed(2);
+      document.getElementById('balanceDisplay').textContent = bal;
+      document.getElementById('withdrawableDisplay').textContent = bal;
+      document.getElementById('missionBalance').textContent = bal;
+
+      const btn = document.getElementById('withdrawBtn');
+      if (balance >= MIN_WITHDRAW) {
+        btn.classList.remove('btn-disabled');
+        btn.classList.add('btn-primary');
+        btn.disabled = false;
+      } else {
+        btn.classList.add('btn-disabled');
+        btn.classList.remove('btn-primary');
+        btn.disabled = true;
+      }
+    }
+
+    function showToast(msg) {
+      const toast = document.getElementById('toast');
+      toast.textContent = msg;
+      toast.classList.remove('opacity-0', 'pointer-events-none');
+      toast.classList.add('opacity-100');
+      setTimeout(() => {
+        toast.classList.add('opacity-0', 'pointer-events-none');
+        toast.classList.remove('opacity-100');
+      }, 2200);
+    }
+
+    // ===================== TAB SWITCHING =====================
+    document.querySelectorAll('.nav-item').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const tab = btn.dataset.tab;
+
+        // Update nav styles
+        document.querySelectorAll('.nav-item').forEach(b => {
+          b.classList.remove('active');
+          b.classList.add('text-slate-400');
+        });
+        btn.classList.add('active');
+        btn.classList.remove('text-slate-400');
+
+        // Switch content
+        document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+        document.getElementById('tab-' + tab).classList.add('active');
+      });
+    });
+
+    // ===================== ACTIONS =====================
+    document.getElementById('refreshBtn').addEventListener('click', () => {
+      loadUser();
+      updateBalances();
+      showToast('Refreshed');
+    });
+
+    document.getElementById('historyBtn').addEventListener('click', () => {
+      showToast('No transactions yet');
+    });
+
+    document.getElementById('withdrawBtn').addEventListener('click', () => {
+      if (balance < MIN_WITHDRAW) return;
+      showToast('Withdrawal request submitted');
+      // TODO: Connect to your backend API here
+    });
+
+    function doTask(amount) {
+      balance += amount;
+      updateBalances();
+      showToast(`+${amount.toFixed(2)} USDT earned!`);
+      // TODO: Connect to your backend to verify & credit the reward
+    }
+
+    document.getElementById('copyBtn').addEventListener('click', () => {
+      const link = document.getElementById('refLink').value;
+      navigator.clipboard.writeText(link).then(() => {
+        showToast('Link copied!');
+      }).catch(() => {
+        // Fallback for older browsers
+        const input = document.getElementById('refLink');
+        input.select();
+        document.execCommand('copy');
+        showToast('Link copied!');
+      });
+    });
+
+    document.getElementById('shareBtn').addEventListener('click', () => {
+      const link = document.getElementById('refLink').value;
+      const shareText = 'Join me and earn USDT!';
+
+      if (typeof tg.openTelegramLink === 'function') {
+        tg.openTelegramLink(
+          `https://t.me/share/url?url=${encodeURIComponent(link)}&text=${encodeURIComponent(shareText)}`
+        );
+      } else if (navigator.share) {
+        navigator.share({
+          title: 'USDT Vault',
+          text: shareText,
+          url: link
+        }).catch(() => {});
+      } else {
+        navigator.clipboard.writeText(`${shareText} ${link}`);
+        showToast('Link ready to share');
+      }
+    });
+
+    // ===================== INIT =====================
+    loadUser();
+    updateBalances();
+    document.getElementById('totalRegistered').textContent = totalRegistered;
+    document.getElementById('referralBonus').textContent = referralBonus.toFixed(2);
+  </script>
+</body>
+</html>
