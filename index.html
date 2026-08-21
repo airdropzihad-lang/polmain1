@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>USDT Vault Mini App</title>
+  <title>USDT Cyber Vault</title>
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
@@ -12,14 +12,15 @@
         extend: {
           colors: {
             gold: {
-              400: '#fbbf24',
-              500: '#f59e0b',
-              600: '#d97706',
+              400: '#facc15',
+              500: '#eab308',
+              600: '#ca8a04',
             },
-            dark: {
-              900: '#0b0e14',
-              800: '#151a23',
-              700: '#1f2736',
+            cyber: {
+              bg: '#05070a',
+              card: '#0f172a',
+              accent: '#38bdf8',
+              border: '#1e293b'
             }
           }
         }
@@ -28,193 +29,240 @@
   </script>
   <style>
     body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-      background-color: #0b0e14;
-      color: #f3f4f6;
+      font-family: 'Segoe UI', Roboto, sans-serif;
+      background-color: #05070a;
+      color: #f8fafc;
       min-height: 100vh;
       overscroll-behavior: none;
       -webkit-tap-highlight-color: transparent;
     }
     .tab-content { display: none; }
-    .tab-content.active { display: block; animation: fadeIn 0.25s ease; }
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(6px); }
-      to   { opacity: 1; transform: translateY(0); }
+    .tab-content.active { display: block; animation: slideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1); }
+    @keyframes slideUp {
+      from { opacity: 0; transform: translateY(12px); }
+      to { opacity: 1; transform: translateY(0); }
     }
-    .nav-item.active { color: #f59e0b; }
-    .nav-item.active svg { stroke: #f59e0b; }
-    .card-gradient {
-      background: linear-gradient(135deg, #1f2736 0%, #151a23 100%);
-      border: 1px solid rgba(245, 158, 11, 0.2);
+    .neon-border {
+      box-shadow: 0 0 15px rgba(234, 179, 8, 0.15);
+      border: 1px solid rgba(234, 179, 8, 0.3);
     }
-    .btn-gold {
-      background: linear-gradient(135deg, #f59e0b, #d97706);
-      box-shadow: 0 4px 15px rgba(245, 158, 11, 0.25);
+    .btn-gold-glow {
+      background: linear-gradient(135deg, #eab308, #ca8a04);
+      box-shadow: 0 0 20px rgba(234, 179, 8, 0.4);
     }
-    .btn-gold:active { transform: scale(0.97); }
+    .btn-gold-glow:active { transform: scale(0.96); }
     .btn-disabled {
-      background: #374151 !important;
-      color: #6b7280 !important;
+      background: #1e293b !important;
+      color: #64748b !important;
       box-shadow: none !important;
       pointer-events: none;
     }
+    .tap-glow:active {
+      transform: scale(0.95);
+      box-shadow: 0 0 25px rgba(234, 179, 8, 0.6);
+    }
   </style>
 </head>
-<body class="pb-24">
+<body class="pb-28">
 
-  <!-- ===================== HEADER ===================== -->
-  <header class="sticky top-0 z-40 bg-dark-900/90 backdrop-blur-md border-b border-gray-800 px-4 py-3">
+  <!-- TOP PROFILE HEADER -->
+  <header class="sticky top-0 z-40 bg-cyber-bg/90 backdrop-blur-lg border-b border-cyber-border px-4 py-3">
     <div class="flex items-center justify-between max-w-lg mx-auto">
       <div class="flex items-center gap-3">
         <div class="relative">
-          <img id="userAvatar" src="https://via.placeholder.com/48/f59e0b/ffffff?text=U" alt="Avatar" class="w-11 h-11 rounded-full object-cover border border-amber-500/50" />
-          <div class="absolute bottom-0 right-0 w-3 h-3 bg-green-500 border-2 border-dark-900 rounded-full"></div>
+          <img id="userAvatar" src="https://via.placeholder.com/48/eab308/000000?text=U" alt="Avatar" class="w-11 h-11 rounded-xl object-cover border-2 border-gold-500 shadow-md shadow-gold-500/20" />
+          <span class="absolute -bottom-1 -right-1 flex h-3 w-3">
+            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75"></span>
+            <span class="relative inline-flex rounded-full h-3 w-3 bg-amber-500"></span>
+          </span>
         </div>
         <div>
-          <h1 id="userName" class="font-semibold text-gray-100 text-sm leading-tight">Loading...</h1>
-          <p id="userHandle" class="text-xs text-gray-400">@username</p>
+          <h1 id="userName" class="font-bold text-gray-100 text-sm leading-tight tracking-wide">Loading...</h1>
+          <p id="userHandle" class="text-[11px] text-amber-400/80 font-mono">@username</p>
         </div>
       </div>
 
       <div class="flex items-center gap-2">
-        <span class="text-[10px] font-bold tracking-wider bg-amber-500/10 text-amber-400 border border-amber-500/30 px-2.5 py-1 rounded-full">
-          BEP-20
-        </span>
-        <button id="refreshBtn" class="w-8 h-8 flex items-center justify-center rounded-full bg-dark-800 border border-gray-700 text-amber-500 active:scale-95">
-          <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
-          </svg>
-        </button>
+        <div class="bg-amber-500/10 border border-amber-500/30 rounded-xl px-3 py-1 text-right">
+          <p class="text-[9px] text-amber-400 uppercase font-bold tracking-wider">Network</p>
+          <p class="text-[11px] font-extrabold text-white">BEP-20</p>
+        </div>
       </div>
     </div>
   </header>
 
-  <!-- ===================== MAIN CONTENT ===================== -->
-  <main class="max-w-lg mx-auto px-4 pt-5">
+  <!-- MAIN CONTAINER -->
+  <main class="max-w-lg mx-auto px-4 pt-4">
 
     <!-- VAULT TAB -->
     <section id="tab-vault" class="tab-content active space-y-4">
-      <div class="card-gradient rounded-2xl p-5 shadow-lg relative overflow-hidden">
-        <div class="absolute -right-4 -bottom-4 w-24 h-24 bg-amber-500/10 rounded-full blur-xl"></div>
-        <p class="text-xs font-semibold text-amber-400 uppercase tracking-wider">Total Balance</p>
-        <div class="flex items-end gap-1.5 mt-2">
-          <span id="balanceDisplay" class="text-4xl font-extrabold text-white">0.00</span>
-          <span class="text-base font-bold text-amber-500 mb-1">USDT</span>
+      
+      <!-- BALANCE DISPLAY CARD -->
+      <div class="bg-cyber-card neon-border rounded-3xl p-6 relative overflow-hidden">
+        <div class="absolute -top-10 -right-10 w-32 h-32 bg-amber-500/10 rounded-full blur-2xl"></div>
+        <div class="flex justify-between items-center mb-1">
+          <span class="text-xs font-bold text-amber-400 tracking-wider uppercase">Vault Balance</span>
+          <span class="text-[10px] bg-emerald-500/20 text-emerald-400 px-2 py-0.5 rounded-md border border-emerald-500/30 font-mono">LIVE MINING</span>
         </div>
-        <div class="mt-4 pt-3 border-t border-gray-800 flex gap-2">
-          <button id="historyBtn" class="w-full py-2 rounded-xl bg-dark-800 text-gray-300 text-xs font-medium border border-gray-700 hover:bg-dark-700">
-            Transaction History
+        
+        <div class="flex items-baseline gap-2 my-2">
+          <span id="balanceDisplay" class="text-4xl font-black text-white tracking-tight">0.00</span>
+          <span class="text-lg font-bold text-amber-400">USDT</span>
+        </div>
+
+        <div class="grid grid-cols-2 gap-2 mt-4 pt-4 border-t border-cyber-border">
+          <button id="claimDailyBtn" onclick="claimDailyBonus()" class="py-2.5 rounded-xl bg-amber-500/10 border border-amber-500/40 text-amber-400 text-xs font-bold hover:bg-amber-500/20 transition flex items-center justify-center gap-1.5">
+            🎁 Daily $2.00
+          </button>
+          <button onclick="toggleHistoryModal(true)" class="py-2.5 rounded-xl bg-slate-800 border border-cyber-border text-gray-300 text-xs font-semibold hover:bg-slate-700 transition">
+            📜 History
           </button>
         </div>
       </div>
 
-      <div class="bg-dark-800 rounded-2xl p-5 border border-gray-800 space-y-3">
+      <!-- TAP ENERGY MINER FEATURE -->
+      <div class="bg-cyber-card border border-cyber-border rounded-2xl p-4 text-center space-y-3">
         <div class="flex justify-between items-center text-xs">
-          <span class="text-gray-400">Withdrawable Balance</span>
+          <span class="text-gray-400">Power Tap Booster</span>
+          <span class="text-amber-400 font-bold"><span id="energyCount">10</span>/10 Energy</span>
+        </div>
+        <button id="tapBtn" onclick="handleTap()" class="w-full py-6 rounded-2xl bg-gradient-to-r from-slate-900 to-slate-800 border border-amber-500/30 tap-glow flex flex-col items-center justify-center gap-1 transition">
+          <span class="text-3xl">⚡</span>
+          <span class="text-xs font-bold text-amber-400">TAP TO MINE (+0.10 USDT)</span>
+        </button>
+      </div>
+
+      <!-- WITHDRAWAL BOX -->
+      <div class="bg-cyber-card border border-cyber-border rounded-2xl p-5 space-y-3">
+        <div class="flex justify-between items-center text-xs">
+          <span class="text-gray-400">Withdrawable Amount</span>
           <span class="font-bold text-white"><span id="withdrawableDisplay">0.00</span> USDT</span>
         </div>
 
         <div>
-          <label class="text-xs text-gray-400 mb-1 block">USDT Wallet Address (BEP20)</label>
-          <input id="walletInput" type="text" placeholder="0x..." class="w-full bg-dark-900 border border-gray-700 rounded-xl px-3 py-2.5 text-xs text-gray-200 focus:outline-none focus:border-amber-500" />
+          <label class="text-[11px] text-gray-400 mb-1 block">USDT Receiving Address (BEP20)</label>
+          <input id="walletInput" type="text" placeholder="0x..." class="w-full bg-slate-950 border border-cyber-border rounded-xl px-3.5 py-3 text-xs text-amber-400 focus:outline-none focus:border-amber-500 font-mono" />
         </div>
 
-        <button id="withdrawBtn" class="w-full py-3 rounded-xl text-dark-900 font-bold text-sm btn-gold transition">
-          Withdraw USDT
+        <button id="withdrawBtn" class="w-full py-3.5 rounded-xl text-black font-extrabold text-sm btn-gold-glow transition">
+          WITHDRAW TO WALLET
         </button>
 
-        <p class="text-center text-[11px] text-gray-500">
-          Minimum withdrawal: <span class="text-amber-500 font-medium">$25.00 USDT</span>
+        <p class="text-center text-[10px] text-gray-500">
+          Threshold: <span class="text-amber-400 font-semibold">$25.00 USDT</span>
         </p>
       </div>
     </section>
 
     <!-- MISSION TAB -->
-    <section id="tab-mission" class="tab-content space-y-4">
-      <div class="bg-dark-800 rounded-xl px-4 py-3 border border-gray-800 flex justify-between items-center">
-        <span class="text-xs text-gray-400">Current Balance</span>
+    <section id="tab-mission" class="tab-content space-y-3">
+      <div class="bg-cyber-card border border-cyber-border rounded-2xl p-4 flex justify-between items-center">
+        <span class="text-xs text-gray-400">Mission Rewards</span>
         <span class="text-sm font-bold text-amber-400"><span id="missionBalance">0.00</span> USDT</span>
       </div>
 
-      <div class="bg-dark-800 rounded-2xl p-4 border border-gray-800 flex items-center gap-3">
-        <div class="w-10 h-10 rounded-xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center text-xl">📢</div>
-        <div class="flex-1">
-          <h3 class="font-semibold text-white text-xs">Join Telegram Channel</h3>
-          <p class="text-[11px] text-amber-400 mt-0.5">+5.00 USDT</p>
+      <!-- TASK 1 -->
+      <div class="bg-cyber-card border border-cyber-border rounded-2xl p-4 flex items-center justify-between gap-3">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-center text-lg">📢</div>
+          <div>
+            <h3 class="font-semibold text-white text-xs">Join Telegram Channel</h3>
+            <p class="text-[11px] text-amber-400 font-bold">+5.00 USDT</p>
+          </div>
         </div>
-        <button id="taskChannelBtn" onclick="doChannelTask()" class="px-3.5 py-2 rounded-xl btn-gold text-dark-900 text-xs font-bold">JOIN</button>
+        <button id="taskChannelBtn" onclick="doChannelTask()" class="px-4 py-2 rounded-xl btn-gold-glow text-black text-xs font-bold">JOIN</button>
       </div>
 
-      <div class="bg-dark-800 rounded-2xl p-4 border border-gray-800 flex items-center gap-3">
-        <div class="w-10 h-10 rounded-xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center text-xl">📺</div>
-        <div class="flex-1">
-          <h3 class="font-semibold text-white text-xs">Watch Video Task</h3>
-          <p class="text-[11px] text-amber-400 mt-0.5">+3.00 USDT</p>
+      <!-- TASK 2 -->
+      <div class="bg-cyber-card border border-cyber-border rounded-2xl p-4 flex items-center justify-between gap-3">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-center text-lg">📺</div>
+          <div>
+            <h3 class="font-semibold text-white text-xs">Watch Promo Video</h3>
+            <p class="text-[11px] text-amber-400 font-bold">+3.00 USDT</p>
+          </div>
         </div>
-        <button onclick="doTask(3)" class="px-3.5 py-2 rounded-xl btn-gold text-dark-900 text-xs font-bold">WATCH</button>
+        <button id="taskVideoBtn" onclick="doVideoTask()" class="px-4 py-2 rounded-xl btn-gold-glow text-black text-xs font-bold">WATCH</button>
       </div>
     </section>
 
     <!-- REFER TAB -->
     <section id="tab-refer" class="tab-content space-y-4">
-      <div class="card-gradient rounded-2xl p-5 text-center">
-        <p class="text-xs font-medium text-amber-400 uppercase">Earn per referral</p>
-        <p class="text-3xl font-extrabold text-white mt-1">$4.00 <span class="text-sm text-amber-500">USDT</span></p>
+      <div class="bg-cyber-card neon-border rounded-3xl p-6 text-center">
+        <p class="text-xs font-bold text-amber-400 uppercase tracking-widest">Referral Bounty</p>
+        <p class="text-3xl font-black text-white mt-1">$4.00 <span class="text-sm text-amber-400">USDT</span></p>
+        <p class="text-[10px] text-gray-400 mt-1">Get instant bonus for every active referral</p>
       </div>
 
-      <div class="bg-dark-800 rounded-2xl p-4 border border-gray-800 space-y-3">
-        <label class="text-xs text-gray-400 block">Your Referral Link</label>
-        <input id="refLink" type="text" readonly class="w-full bg-dark-900 border border-gray-700 rounded-xl px-3 py-2.5 text-xs text-gray-300 truncate focus:outline-none" value="" />
+      <div class="bg-cyber-card border border-cyber-border rounded-2xl p-4 space-y-3">
+        <label class="text-xs text-gray-400 block">Unique Invite Link</label>
+        <input id="refLink" type="text" readonly class="w-full bg-slate-950 border border-cyber-border rounded-xl px-3 py-2.5 text-xs text-amber-400 font-mono truncate focus:outline-none" value="" />
         <div class="flex gap-2">
-          <button id="copyBtn" class="flex-1 py-2.5 rounded-xl bg-dark-700 text-amber-400 text-xs font-semibold border border-amber-500/30">COPY</button>
-          <button id="shareBtn" class="flex-1 py-2.5 rounded-xl btn-gold text-dark-900 text-xs font-bold">SHARE</button>
+          <button id="copyBtn" class="flex-1 py-3 rounded-xl bg-slate-800 text-amber-400 text-xs font-bold border border-amber-500/30 hover:bg-slate-700">COPY</button>
+          <button id="shareBtn" onclick="shareRefLink()" class="flex-1 py-3 rounded-xl btn-gold-glow text-black text-xs font-extrabold">SHARE</button>
         </div>
       </div>
 
       <div class="grid grid-cols-2 gap-3">
-        <div class="bg-dark-800 rounded-2xl p-4 border border-gray-800 text-center">
-          <p class="text-[10px] text-gray-400 uppercase">Referrals</p>
-          <p id="totalRegistered" class="text-xl font-bold text-white mt-1">0</p>
+        <div class="bg-cyber-card border border-cyber-border rounded-2xl p-4 text-center">
+          <p class="text-[10px] text-gray-400 uppercase">Invited Friends</p>
+          <p id="totalRegistered" class="text-2xl font-black text-white mt-1">0</p>
         </div>
-        <div class="bg-dark-800 rounded-2xl p-4 border border-gray-800 text-center">
-          <p class="text-[10px] text-gray-400 uppercase">Referral Earned</p>
-          <p id="referralBonus" class="text-xl font-bold text-amber-400 mt-1">0.00</p>
+        <div class="bg-cyber-card border border-cyber-border rounded-2xl p-4 text-center">
+          <p class="text-[10px] text-gray-400 uppercase">Ref Earnings</p>
+          <p id="referralBonus" class="text-2xl font-black text-amber-400 mt-1">0.00</p>
         </div>
       </div>
     </section>
 
   </main>
 
-  <!-- BOTTOM NAV -->
-  <nav class="fixed bottom-0 left-0 right-0 bg-dark-900/95 backdrop-blur-md border-t border-gray-800 z-50">
-    <div class="max-w-lg mx-auto flex justify-around py-2">
-      <button data-tab="vault" class="nav-item active flex flex-col items-center gap-1 text-gray-400">
+  <!-- HISTORY MODAL -->
+  <div id="historyModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+    <div class="bg-cyber-card border border-cyber-border rounded-3xl w-full max-w-md p-5 space-y-4">
+      <div class="flex justify-between items-center border-b border-cyber-border pb-3">
+        <h3 class="text-sm font-bold text-amber-400">Transaction History</h3>
+        <button onclick="toggleHistoryModal(false)" class="text-gray-400 text-lg font-bold">&times;</button>
+      </div>
+      <div id="historyList" class="space-y-2 max-h-60 overflow-y-auto text-xs">
+        <p class="text-gray-500 text-center py-4">No recent transactions</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- NAVIGATION BAR -->
+  <nav class="fixed bottom-0 left-0 right-0 bg-cyber-bg/95 backdrop-blur-xl border-t border-cyber-border z-40">
+    <div class="max-w-lg mx-auto flex justify-around py-3">
+      <button data-tab="vault" class="nav-item active flex flex-col items-center gap-1 text-amber-500">
         <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
-        <span class="text-[10px] font-medium">Vault</span>
+        <span class="text-[10px] font-bold">Vault</span>
       </button>
       <button data-tab="mission" class="nav-item flex flex-col items-center gap-1 text-gray-400">
         <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 022 2h2a2 2 0 022-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
-        <span class="text-[10px] font-medium">Mission</span>
+        <span class="text-[10px] font-bold">Mission</span>
       </button>
       <button data-tab="refer" class="nav-item flex flex-col items-center gap-1 text-gray-400">
         <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
-        <span class="text-[10px] font-medium">Refer</span>
+        <span class="text-[10px] font-bold">Refer</span>
       </button>
     </div>
   </nav>
 
   <!-- TOAST -->
-  <div id="toast" class="fixed top-16 left-1/2 -translate-x-1/2 bg-amber-500 text-dark-900 text-xs font-bold px-4 py-2 rounded-full shadow-lg opacity-0 pointer-events-none transition-all duration-300 z-50">
+  <div id="toast" class="fixed top-16 left-1/2 -translate-x-1/2 bg-amber-400 text-black text-xs font-black px-5 py-2.5 rounded-full shadow-2xl opacity-0 pointer-events-none transition-all duration-300 z-50">
     Copied!
   </div>
 
   <script>
-    const BOT_USERNAME = 'YourBotUsername'; // আপনার টেলিগ্রাম বট ইউজারনেম (@ ছাড়া)
-    const REQUIRED_CHANNEL = 'https://t.me/CryptoIncomeBD'; // চ্যানেল লিংক
+    const BOT_USERNAME = 'YourBotUsername'; 
+    const REQUIRED_CHANNEL = 'https://t.me/CryptoIncomeBD'; 
 
     let balance = 0.00;
+    let energy = 10;
     const MIN_WITHDRAW = 25.00;
     let channelTaskDone = false;
+    let videoTaskDone = false;
+    let history = [];
 
     const tg = window.Telegram.WebApp;
     tg.ready();
@@ -243,13 +291,97 @@
       const btn = document.getElementById('withdrawBtn');
       if (balance >= MIN_WITHDRAW) {
         btn.classList.remove('btn-disabled');
-        btn.classList.add('btn-gold');
+        btn.classList.add('btn-gold-glow');
         btn.disabled = false;
       } else {
         btn.classList.add('btn-disabled');
-        btn.classList.remove('btn-gold');
+        btn.classList.remove('btn-gold-glow');
         btn.disabled = true;
       }
+    }
+
+    function addHistory(title, amount) {
+      history.unshift({ title, amount, date: new Date().toLocaleTimeString() });
+      renderHistory();
+    }
+
+    function renderHistory() {
+      const container = document.getElementById('historyList');
+      if (history.length === 0) {
+        container.innerHTML = '<p class="text-gray-500 text-center py-4">No recent transactions</p>';
+        return;
+      }
+      container.innerHTML = history.map(item => `
+        <div class="flex justify-between items-center bg-slate-950 p-2.5 rounded-xl border border-cyber-border">
+          <div>
+            <p class="font-bold text-white">${item.title}</p>
+            <p class="text-[10px] text-gray-500">${item.date}</p>
+          </div>
+          <span class="font-bold ${item.amount.startsWith('+') ? 'text-emerald-400' : 'text-red-400'}">${item.amount} USDT</span>
+        </div>
+      `).join('');
+    }
+
+    function handleTap() {
+      if (energy > 0) {
+        energy--;
+        balance += 0.10;
+        document.getElementById('energyCount').textContent = energy;
+        updateBalances();
+        showToast('+0.10 USDT Mined!');
+      } else {
+        showToast('Out of Energy! Recharge needed.');
+      }
+    }
+
+    function claimDailyBonus() {
+      balance += 2.00;
+      updateBalances();
+      addHistory('Daily Bonus', '+2.00');
+      document.getElementById('claimDailyBtn').classList.add('btn-disabled');
+      showToast('Claimed $2.00 USDT!');
+    }
+
+    function doChannelTask() {
+      if (channelTaskDone) return;
+      tg.openTelegramLink(REQUIRED_CHANNEL);
+      const btn = document.getElementById('taskChannelBtn');
+      btn.textContent = 'CHECKING...';
+      
+      setTimeout(() => {
+        balance += 5.00;
+        channelTaskDone = true;
+        updateBalances();
+        addHistory('Telegram Task', '+5.00');
+        btn.textContent = 'COMPLETED';
+        btn.classList.add('btn-disabled');
+        showToast('+5.00 USDT Added!');
+      }, 4000);
+    }
+
+    function doVideoTask() {
+      if (videoTaskDone) return;
+      const btn = document.getElementById('taskVideoBtn');
+      btn.textContent = 'WATCHING...';
+      setTimeout(() => {
+        balance += 3.00;
+        videoTaskDone = true;
+        updateBalances();
+        addHistory('Video Task', '+3.00');
+        btn.textContent = 'COMPLETED';
+        btn.classList.add('btn-disabled');
+        showToast('+3.00 USDT Added!');
+      }, 3000);
+    }
+
+    function shareRefLink() {
+      const link = document.getElementById('refLink').value;
+      const text = encodeURIComponent("Join USDT Cyber Vault and get free USDT rewards!");
+      tg.openTelegramLink(`https://t.me/share/url?url=${encodeURIComponent(link)}&text=${text}`);
+    }
+
+    function toggleHistoryModal(show) {
+      document.getElementById('historyModal').classList.toggle('hidden', !show);
     }
 
     function showToast(msg) {
@@ -267,35 +399,16 @@
     document.querySelectorAll('.nav-item').forEach(btn => {
       btn.addEventListener('click', () => {
         const tab = btn.dataset.tab;
-        document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
+        document.querySelectorAll('.nav-item').forEach(b => {
+          b.classList.remove('active', 'text-amber-500');
+          b.classList.add('text-gray-400');
+        });
+        btn.classList.add('active', 'text-amber-500');
+        btn.classList.remove('text-gray-400');
         document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
         document.getElementById('tab-' + tab).classList.add('active');
       });
     });
-
-    // CHANNEL TASK VERIFICATION
-    function doChannelTask() {
-      if(channelTaskDone) return;
-      tg.openTelegramLink(REQUIRED_CHANNEL);
-      const btn = document.getElementById('taskChannelBtn');
-      btn.textContent = 'VERIFYING...';
-      
-      setTimeout(() => {
-        balance += 5.00;
-        channelTaskDone = true;
-        updateBalances();
-        btn.textContent = 'DONE';
-        btn.classList.add('btn-disabled');
-        showToast('+5.00 USDT Added!');
-      }, 4000);
-    }
-
-    function doTask(amount) {
-      balance += amount;
-      updateBalances();
-      showToast(`+${amount.toFixed(2)} USDT Added!`);
-    }
 
     // WITHDRAW
     document.getElementById('withdrawBtn').addEventListener('click', () => {
@@ -304,7 +417,8 @@
         showToast('Please enter your BEP20 Wallet Address');
         return;
       }
-      showToast('Withdrawal Request Sent to Admin!');
+      addHistory('Withdrawal', `-${balance.toFixed(2)}`);
+      showToast('Withdrawal Request Sent!');
       balance = 0;
       updateBalances();
       document.getElementById('walletInput').value = '';
