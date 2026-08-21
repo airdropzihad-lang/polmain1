@@ -42,22 +42,17 @@
       to { opacity: 1; transform: translateY(0); }
     }
 
-    /* Pulse animation for Telegram loading logo */
     @keyframes pulseGlow {
       0%, 100% { transform: scale(1); opacity: 1; }
       50% { transform: scale(1.08); opacity: 0.85; }
     }
-    .loading-logo {
-      animation: pulseGlow 1.5s infinite ease-in-out;
-    }
+    .loading-logo { animation: pulseGlow 1.5s infinite ease-in-out; }
 
     .btn-action {
       background: #38bdf8;
       box-shadow: 0 4px 12px rgba(56, 189, 248, 0.3);
     }
-    .btn-action:active {
-      transform: scale(0.96);
-    }
+    .btn-action:active { transform: scale(0.96); }
   </style>
 </head>
 <body class="pb-24">
@@ -75,14 +70,23 @@
     </div>
   </div>
 
-  <!-- TOP HEADER -->
-  <header class="bg-white/80 backdrop-blur-md sticky top-0 z-30 px-4 py-3 border-b border-slate-100 flex justify-between items-center">
+  <!-- TOP HEADER (UPDATED WITH USERNAME & ACTIVE ICON) -->
+  <header class="bg-white/90 backdrop-blur-md sticky top-0 z-30 px-4 py-3 border-b border-slate-100 flex justify-between items-center">
     <div class="flex items-center gap-2">
-      <div class="w-8 h-8 rounded-full bg-brand-blue flex items-center justify-center text-white font-black text-sm">
-        ◆
+      <!-- Active User Avatar / Icon -->
+      <div class="relative">
+        <div class="w-8 h-8 rounded-full bg-brand-blue flex items-center justify-center text-white font-black text-xs overflow-hidden border border-brand-blue/30">
+          <img id="headerAvatar" src="https://via.placeholder.com/40/0098ea/ffffff?text=U" alt="Avatar" class="w-full h-full object-cover hidden">
+          <span id="headerAvatarFallback">◆</span>
+        </div>
+        <!-- Online/Active Indicator -->
+        <span class="w-2.5 h-2.5 bg-emerald-500 border-2 border-white rounded-full absolute -bottom-0.5 -right-0.5"></span>
       </div>
-      <span class="font-black text-lg text-slate-900 tracking-tight">Gram Drop</span>
+      <!-- User First Name -->
+      <span id="headerUserName" class="font-bold text-base text-slate-900 tracking-tight">User Name</span>
     </div>
+
+    <!-- Balance Badge -->
     <div class="bg-slate-100 border border-slate-200/80 rounded-full px-3 py-1 flex items-center gap-1.5 shadow-sm">
       <span class="text-brand-blue text-xs font-bold">◆</span>
       <span id="headerBalance" class="text-xs font-black text-slate-800">0</span>
@@ -94,7 +98,6 @@
 
     <!-- 1. HOME TAB -->
     <section id="tab-home" class="tab-content active space-y-4">
-      
       <!-- MAIN BALANCE CARD -->
       <div class="bg-gradient-to-r from-sky-400 to-brand-blue rounded-3xl p-5 text-white shadow-lg shadow-sky-500/20 relative overflow-hidden">
         <p class="text-[11px] font-bold uppercase opacity-80 tracking-wider">Your Balance</p>
@@ -177,34 +180,6 @@
           <p class="text-[10px] text-slate-400">Invited</p>
         </div>
       </div>
-
-      <!-- HOW IT WORKS -->
-      <div class="space-y-2 pt-2">
-        <h4 class="text-xs font-bold text-slate-400 uppercase tracking-wider">How it works</h4>
-        <div class="bg-white rounded-2xl p-4 border border-slate-100 shadow-sm space-y-3">
-          <div class="flex gap-3 items-start">
-            <span class="w-6 h-6 rounded-full bg-sky-100 text-sky-500 text-xs font-black flex items-center justify-center flex-shrink-0">1</span>
-            <div>
-              <p class="text-xs font-bold text-slate-800">Complete Tasks</p>
-              <p class="text-[11px] text-slate-400">Join channels and follow social accounts for instant GD.</p>
-            </div>
-          </div>
-          <div class="flex gap-3 items-start">
-            <span class="w-6 h-6 rounded-full bg-sky-100 text-sky-500 text-xs font-black flex items-center justify-center flex-shrink-0">2</span>
-            <div>
-              <p class="text-xs font-bold text-slate-800">Daily Bonus</p>
-              <p class="text-[11px] text-slate-400">Log in daily to claim free GD tokens.</p>
-            </div>
-          </div>
-          <div class="flex gap-3 items-start">
-            <span class="w-6 h-6 rounded-full bg-sky-100 text-sky-500 text-xs font-black flex items-center justify-center flex-shrink-0">3</span>
-            <div>
-              <p class="text-xs font-bold text-slate-800">Instant Withdraw</p>
-              <p class="text-[11px] text-slate-400">Convert tokens to USDT or TON easily from Profile.</p>
-            </div>
-          </div>
-        </div>
-      </div>
     </section>
 
     <!-- 2. EARN (TASKS) TAB -->
@@ -226,7 +201,6 @@
 
       <!-- TELEGRAM TASKS -->
       <div id="subtab-telegram" class="subtab-content active space-y-3">
-        <!-- Channel Task -->
         <div class="bg-white rounded-2xl p-4 border border-slate-100 shadow-sm flex items-center justify-between">
           <div class="flex items-center gap-3">
             <div class="w-11 h-11 rounded-2xl bg-sky-100 text-sky-500 flex items-center justify-center text-xl">
@@ -242,7 +216,6 @@
           </button>
         </div>
 
-        <!-- Group Task -->
         <div class="bg-white rounded-2xl p-4 border border-slate-100 shadow-sm flex items-center justify-between">
           <div class="flex items-center gap-3">
             <div class="w-11 h-11 rounded-2xl bg-sky-100 text-sky-500 flex items-center justify-center text-xl">
@@ -261,7 +234,6 @@
 
       <!-- SOCIAL TASKS -->
       <div id="subtab-social" class="subtab-content space-y-3">
-        <!-- Facebook Task -->
         <div class="bg-white rounded-2xl p-4 border border-slate-100 shadow-sm flex items-center justify-between">
           <div class="flex items-center gap-3">
             <div class="w-11 h-11 rounded-2xl bg-blue-100 text-blue-600 flex items-center justify-center text-xl">
@@ -277,7 +249,6 @@
           </button>
         </div>
 
-        <!-- Twitter Task -->
         <div class="bg-white rounded-2xl p-4 border border-slate-100 shadow-sm flex items-center justify-between">
           <div class="flex items-center gap-3">
             <div class="w-11 h-11 rounded-2xl bg-slate-100 text-slate-800 flex items-center justify-center text-xl">
@@ -293,7 +264,6 @@
           </button>
         </div>
 
-        <!-- YouTube Task -->
         <div class="bg-white rounded-2xl p-4 border border-slate-100 shadow-sm flex items-center justify-between">
           <div class="flex items-center gap-3">
             <div class="w-11 h-11 rounded-2xl bg-red-100 text-red-500 flex items-center justify-center text-xl">
@@ -311,50 +281,109 @@
       </div>
     </section>
 
-    <!-- 3. PROFILE & WITHDRAW TAB -->
+    <!-- 3. PROFILE TAB (MATCHING YOUR EXACT SCREENSHOT DESIGN) -->
     <section id="tab-profile" class="tab-content space-y-4">
-      <!-- USER PROFILE HEADER CARD -->
-      <div class="bg-white rounded-3xl p-5 border border-slate-100 shadow-sm text-center relative overflow-hidden">
-        <div class="w-20 h-20 rounded-full bg-gradient-to-tr from-sky-400 to-brand-blue p-1 mx-auto mb-3 shadow-md">
-          <img id="userAvatar" src="https://via.placeholder.com/80/0098ea/ffffff?text=User" alt="User Avatar" class="w-full h-full object-cover rounded-full bg-white" />
-        </div>
-        <h2 id="userName" class="font-black text-slate-800 text-base">User Name</h2>
-        <p id="userHandle" class="text-xs text-slate-400 font-mono">@username</p>
-
-        <div class="mt-4 p-3 rounded-2xl bg-slate-50 border border-slate-100 flex justify-around">
-          <div>
-            <p class="text-[10px] text-slate-400 font-bold uppercase">Total Balance</p>
-            <p id="profileBalance" class="text-lg font-black text-brand-blue">0 GD</p>
-          </div>
-          <div class="border-r border-slate-200"></div>
-          <div>
-            <p class="text-[10px] text-slate-400 font-bold uppercase">Estimated Value</p>
-            <p id="profileUsd" class="text-lg font-black text-emerald-500">$0.00</p>
-          </div>
-        </div>
+      <div>
+        <h2 class="text-2xl font-black text-slate-900">Profile</h2>
+        <p class="text-xs text-slate-400">Your account & withdrawals</p>
       </div>
 
-      <!-- WITHDRAW SECTION -->
-      <div class="bg-white rounded-3xl p-5 border border-slate-100 shadow-sm space-y-3">
+      <!-- BLUE PROFILE CARD (SCREENSHOT EXACT LAYOUT) -->
+      <div class="bg-brand-blue rounded-3xl p-5 text-white shadow-lg relative overflow-hidden">
+        <div class="flex items-center justify-between mb-4">
+          <div class="flex items-center gap-3">
+            <div class="w-11 h-11 rounded-full bg-white/20 backdrop-blur-md flex items-center justify-center font-bold text-lg overflow-hidden border border-white/30">
+              <img id="profileCardAvatar" src="" class="w-full h-full object-cover hidden">
+              <span id="profileCardAvatarFallback">◆</span>
+            </div>
+            <div>
+              <h3 id="profileFullName" class="font-black text-sm tracking-wide line-clamp-1">ZIHAD</h3>
+              <p id="profileUserId" class="text-[11px] opacity-80 font-mono">ID 6190416164</p>
+            </div>
+          </div>
+          <!-- Calendar/Wallet Icon -->
+          <div class="w-9 h-9 rounded-xl bg-white/10 flex items-center justify-center text-white border border-white/20">
+            📅
+          </div>
+        </div>
+
+        <p class="text-[10px] font-bold uppercase tracking-wider opacity-80">AVAILABLE BALANCE</p>
+        <div class="flex items-center gap-2 mt-1">
+          <div class="w-6 h-6 rounded-full bg-white text-brand-blue font-black flex items-center justify-center text-xs">
+            ◆
+          </div>
+          <span id="profileCardBalance" class="text-2xl font-black">0</span>
+          <span class="text-xs font-bold opacity-90">GD</span>
+        </div>
+        <p id="profileCardUsd" class="text-xs opacity-80 mt-0.5">≈ $0.000</p>
+      </div>
+
+      <!-- WITHDRAW LOCK / UNLOCK CARD -->
+      <div class="bg-white rounded-3xl p-5 border border-slate-100 shadow-sm space-y-4">
         <div class="flex justify-between items-center">
-          <h3 class="font-bold text-slate-800 text-sm">Withdraw Funds</h3>
-          <span class="text-[10px] font-bold bg-emerald-50 text-emerald-600 px-2 py-0.5 rounded-full border border-emerald-200">USDT / BEP20</span>
+          <h3 class="font-bold text-slate-800 text-sm">Withdraw</h3>
+          <span id="lockBadge" class="text-[11px] font-bold bg-red-50 text-red-500 px-3 py-1 rounded-full flex items-center gap-1 border border-red-100">
+            🔒 Locked
+          </span>
         </div>
 
-        <div>
-          <label class="text-[11px] font-bold text-slate-500 mb-1 block">Receiving Wallet Address</label>
-          <input id="walletInput" type="text" placeholder="Enter USDT BEP20 Address (0x...)" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-3 text-xs text-slate-800 focus:outline-none focus:border-sky-400 font-mono" />
+        <!-- LOCKED VIEW (When balance < 10,000 GD) -->
+        <div id="lockedView" class="text-center py-2 space-y-3">
+          <div class="w-12 h-12 bg-amber-50 text-amber-500 rounded-2xl mx-auto flex items-center justify-center text-2xl">
+            🔒
+          </div>
+          <div>
+            <h4 class="font-bold text-slate-800 text-sm">Minimum withdrawal is <span class="text-amber-500">10,000 GD</span></h4>
+            <p class="text-[11px] text-slate-400 mt-1 max-w-xs mx-auto leading-relaxed">
+              Please make sure you have enough balance to withdraw. Keep earning and this unlocks automatically.
+            </p>
+          </div>
+
+          <!-- PROGRESS BAR -->
+          <div class="pt-2">
+            <div class="w-full bg-slate-100 h-2.5 rounded-full overflow-hidden">
+              <div id="withdrawProgressBar" class="bg-brand-blue h-full transition-all duration-500" style="width: 0%"></div>
+            </div>
+            <p id="withdrawProgressText" class="text-[11px] text-slate-400 font-medium mt-1.5">0 / 10,000 GD · 10,000 to go</p>
+          </div>
         </div>
 
-        <div>
-          <label class="text-[11px] font-bold text-slate-500 mb-1 block">Amount (Min. 1,000 GD = $1.00 USDT)</label>
-          <input id="withdrawAmount" type="number" placeholder="Enter GD amount" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-3 text-xs text-slate-800 focus:outline-none focus:border-sky-400 font-mono" />
+        <!-- UNLOCKED VIEW (When balance >= 10,000 GD) -->
+        <div id="unlockedView" class="space-y-3 hidden">
+          <div>
+            <label class="text-[11px] font-bold text-slate-500 mb-1 block">USDT BEP20 Address</label>
+            <input id="walletInput" type="text" placeholder="Enter wallet address (0x...)" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-3 text-xs text-slate-800 focus:outline-none focus:border-sky-400 font-mono" />
+          </div>
+          <button onclick="handleWithdraw()" class="w-full py-3.5 rounded-2xl bg-sky-400 text-white font-black text-xs btn-action shadow-lg">
+            WITHDRAW FUNDS
+          </button>
         </div>
-
-        <button onclick="handleWithdraw()" class="w-full py-3.5 rounded-2xl bg-sky-400 text-white font-black text-xs btn-action shadow-lg">
-          REQUEST WITHDRAWAL
-        </button>
       </div>
+
+      <!-- WITHDRAWAL HISTORY -->
+      <div class="space-y-2">
+        <h4 class="text-xs font-bold text-slate-400 uppercase tracking-wider">WITHDRAWAL HISTORY</h4>
+        <div class="bg-white rounded-3xl p-6 border border-slate-100 shadow-sm text-center space-y-2 border-dashed">
+          <div class="w-10 h-10 rounded-full bg-slate-100 text-slate-400 mx-auto flex items-center justify-center text-lg">
+            🕒
+          </div>
+          <h5 class="font-bold text-slate-800 text-xs">No withdrawals yet</h5>
+          <p class="text-[11px] text-slate-400">Your payouts will show up here</p>
+        </div>
+      </div>
+
+      <!-- SUPPORT BUTTON -->
+      <a href="https://t.me/Crypto_Income_BD" target="_blank" class="bg-white rounded-2xl p-4 border border-slate-100 shadow-sm flex items-center justify-between block active:scale-98 transition">
+        <div class="flex items-center gap-3">
+          <div class="w-9 h-9 rounded-xl bg-emerald-100 text-emerald-500 flex items-center justify-center text-base font-bold">
+            🛡️
+          </div>
+          <span class="font-bold text-slate-800 text-xs">Support</span>
+        </div>
+        <span class="text-slate-300 text-sm">›</span>
+      </a>
+
+      <p class="text-center text-[10px] text-slate-300 font-mono pt-2">Gram Drop v1.2</p>
     </section>
 
   </main>
@@ -362,19 +391,16 @@
   <!-- BOTTOM NAVIGATION BAR -->
   <nav class="fixed bottom-0 left-0 right-0 bg-white/95 backdrop-blur-md border-t border-slate-200/80 z-40">
     <div class="max-w-md mx-auto flex justify-around py-2">
-      <!-- HOME -->
       <button data-tab="home" onclick="switchTab('home')" class="nav-btn active flex flex-col items-center gap-1 text-sky-500">
         <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
         <span class="text-[10px] font-bold">Home</span>
       </button>
 
-      <!-- EARN -->
       <button data-tab="earn" onclick="switchTab('earn')" class="nav-btn flex flex-col items-center gap-1 text-slate-400">
         <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
         <span class="text-[10px] font-bold">Earn</span>
       </button>
 
-      <!-- PROFILE -->
       <button data-tab="profile" onclick="switchTab('profile')" class="nav-btn flex flex-col items-center gap-1 text-slate-400">
         <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
         <span class="text-[10px] font-bold">Profile</span>
@@ -392,22 +418,21 @@
     let earnedToday = 0;
     let completedTasksCount = 0;
     let dailyClaimed = false;
+    const MIN_WITHDRAW = 10000;
 
-    // Telegram Mini App WebApp Initialization
     const tg = window.Telegram?.WebApp;
     if (tg) {
       tg.ready();
       tg.expand();
     }
 
-    // Hide loading screen after 1.8s
     window.addEventListener('DOMContentLoaded', () => {
       setTimeout(() => {
         const loadingScreen = document.getElementById('loadingScreen');
         loadingScreen.style.opacity = '0';
         loadingScreen.style.transition = 'opacity 0.4s ease';
         setTimeout(() => loadingScreen.style.display = 'none', 400);
-      }, 1800);
+      }, 1600);
 
       loadUserData();
       updateUI();
@@ -416,28 +441,55 @@
     function loadUserData() {
       const user = tg?.initDataUnsafe?.user;
       if (user) {
-        document.getElementById('userName').textContent = user.first_name + (user.last_name ? ' ' + user.last_name : '');
-        document.getElementById('userHandle').textContent = user.username ? '@' + user.username : 'ID: ' + user.id;
+        const fullName = user.first_name + (user.last_name ? ' ' + user.last_name : '');
+        document.getElementById('headerUserName').textContent = user.first_name;
+        document.getElementById('profileFullName').textContent = fullName;
+        document.getElementById('profileUserId').textContent = 'ID ' + user.id;
+
         if (user.photo_url) {
-          document.getElementById('userAvatar').src = user.photo_url;
+          const avatarEl = document.getElementById('headerAvatar');
+          avatarEl.src = user.photo_url;
+          avatarEl.classList.remove('hidden');
+          document.getElementById('headerAvatarFallback').classList.add('hidden');
+
+          const profileAvatarEl = document.getElementById('profileCardAvatar');
+          profileAvatarEl.src = user.photo_url;
+          profileAvatarEl.classList.remove('hidden');
+          document.getElementById('profileCardAvatarFallback').classList.add('hidden');
         }
       } else {
-        document.getElementById('userName').textContent = 'Demo User';
-        document.getElementById('userHandle').textContent = '@demouser';
+        document.getElementById('headerUserName').textContent = 'ZIHAD';
+        document.getElementById('profileFullName').textContent = 'ZIHAD';
+        document.getElementById('profileUserId').textContent = 'ID 6190416164';
       }
     }
 
     function updateUI() {
       document.getElementById('headerBalance').textContent = balance;
       document.getElementById('homeBalance').textContent = balance;
-      document.getElementById('profileBalance').textContent = balance + ' GD';
+      document.getElementById('profileCardBalance').textContent = balance;
       
-      const usdVal = (balance * 0.001).toFixed(3);
+      const usdVal = (balance * 0.0001).toFixed(3);
       document.getElementById('usdBalance').textContent = `≈ $${usdVal}`;
-      document.getElementById('profileUsd').textContent = `$${usdVal}`;
+      document.getElementById('profileCardUsd').textContent = `≈ $${usdVal}`;
 
       document.getElementById('statEarned').textContent = earnedToday;
       document.getElementById('statTasks').textContent = completedTasksCount;
+
+      // Update Withdrawal Lock/Progress Logic
+      const progressPercent = Math.min(100, (balance / MIN_WITHDRAW) * 100);
+      document.getElementById('withdrawProgressBar').style.width = progressPercent + '%';
+      
+      const remaining = Math.max(0, MIN_WITHDRAW - balance);
+      document.getElementById('withdrawProgressText').textContent = `${balance.toLocaleString()} / 10,000 GD · ${remaining.toLocaleString()} to go`;
+
+      if (balance >= MIN_WITHDRAW) {
+        document.getElementById('lockedView').classList.add('hidden');
+        document.getElementById('unlockedView').classList.remove('hidden');
+        const lockBadge = document.getElementById('lockBadge');
+        lockBadge.className = "text-[11px] font-bold bg-emerald-50 text-emerald-600 px-3 py-1 rounded-full border border-emerald-100";
+        lockBadge.textContent = "🔓 Unlocked";
+      }
     }
 
     function switchTab(tabId) {
@@ -504,30 +556,17 @@
         btn.textContent = 'Completed';
         btn.className = "px-4 py-2 rounded-xl bg-slate-100 text-slate-400 text-xs font-bold cursor-default";
         showToast(`✅ Task Done! Received +${reward} GD`);
-      }, 3500);
+      }, 3000);
     }
 
     function handleWithdraw() {
       const wallet = document.getElementById('walletInput').value.trim();
-      const amount = parseInt(document.getElementById('withdrawAmount').value);
-
       if (!wallet) {
         showToast('❌ Please enter a valid BEP20 Wallet Address');
         return;
       }
-      if (!amount || amount < 1000) {
-        showToast('❌ Minimum withdrawal is 1,000 GD ($1.00 USDT)');
-        return;
-      }
-      if (amount > balance) {
-        showToast('❌ Insufficient balance!');
-        return;
-      }
-
-      balance -= amount;
+      balance -= MIN_WITHDRAW;
       updateUI();
-      document.getElementById('walletInput').value = '';
-      document.getElementById('withdrawAmount').value = '';
       showToast('🎉 Withdrawal Request Submitted!');
     }
 
