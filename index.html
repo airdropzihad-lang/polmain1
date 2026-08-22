@@ -96,7 +96,6 @@
 
     <!-- 1. HOME TAB -->
     <section id="tab-home" class="tab-content active space-y-4">
-      <!-- BALANCE CARD -->
       <div class="bg-gradient-to-r from-sky-400 to-brand-blue rounded-3xl p-5 text-white shadow-lg shadow-sky-500/20 relative overflow-hidden">
         <p class="text-[11px] font-bold uppercase opacity-80 tracking-wider">Your Balance</p>
         <div class="flex items-center gap-2 my-2">
@@ -122,7 +121,6 @@
         </div>
       </div>
 
-      <!-- DAILY BONUS CARD -->
       <div class="bg-white rounded-2xl p-4 border border-slate-100 shadow-sm flex items-center justify-between">
         <div class="flex items-center gap-3">
           <div class="w-11 h-11 rounded-2xl bg-amber-100 text-amber-500 flex items-center justify-center text-xl shadow-inner">
@@ -138,7 +136,6 @@
         </button>
       </div>
 
-      <!-- REDEEM CODE CARD -->
       <div class="bg-white rounded-2xl p-4 border border-slate-100 shadow-sm flex items-center justify-between">
         <div class="flex items-center gap-3">
           <div class="w-11 h-11 rounded-2xl bg-purple-100 text-purple-600 flex items-center justify-center text-xl shadow-inner">
@@ -152,38 +149,6 @@
         <button onclick="showComingSoon()" class="px-4 py-2 rounded-xl bg-purple-500 text-white text-xs font-bold shadow-md shadow-purple-500/20 active:scale-95 transition">
           Redeem
         </button>
-      </div>
-
-      <!-- HOW IT WORKS SECTION -->
-      <div class="space-y-3 pt-2">
-        <div class="flex items-center gap-2">
-          <span class="w-4 h-1 bg-sky-400 rounded-full"></span>
-          <h3 class="text-xs font-extrabold text-slate-400 uppercase tracking-wider">HOW IT WORKS</h3>
-        </div>
-
-        <div class="bg-white rounded-3xl p-5 border border-slate-100 shadow-sm space-y-5">
-          <div class="flex items-start gap-3.5">
-            <div class="w-8 h-8 rounded-full bg-sky-100 text-sky-500 font-black text-xs flex items-center justify-center flex-shrink-0">1</div>
-            <div>
-              <h4 class="font-bold text-slate-800 text-sm">Complete tasks</h4>
-              <p class="text-xs text-slate-400 mt-0.5 leading-relaxed">Every task adds GD to your balance instantly</p>
-            </div>
-          </div>
-          <div class="flex items-start gap-3.5">
-            <div class="w-8 h-8 rounded-full bg-sky-100 text-sky-500 font-black text-xs flex items-center justify-center flex-shrink-0">2</div>
-            <div>
-              <h4 class="font-bold text-slate-800 text-sm">Invite friends</h4>
-              <p class="text-xs text-slate-400 mt-0.5 leading-relaxed">Get +20 GD bonus when a friend joins using your link</p>
-            </div>
-          </div>
-          <div class="flex items-start gap-3.5">
-            <div class="w-8 h-8 rounded-full bg-sky-100 text-sky-500 font-black text-xs flex items-center justify-center flex-shrink-0">3</div>
-            <div>
-              <h4 class="font-bold text-slate-800 text-sm">Withdraw</h4>
-              <p class="text-xs text-slate-400 mt-0.5 leading-relaxed">Cash out directly in GRAM token when reaching 100 GD</p>
-            </div>
-          </div>
-        </div>
       </div>
     </section>
 
@@ -245,18 +210,6 @@
         <p class="text-xs text-slate-400 font-medium">Get 20 GD instantly for each invited friend</p>
       </div>
 
-      <div class="space-y-2.5">
-        <div class="bg-slate-50 border border-slate-200/70 rounded-2xl p-3.5 flex items-center justify-between shadow-sm">
-          <div class="flex items-center gap-3">
-            <div class="w-10 h-10 rounded-xl bg-emerald-500 text-white flex items-center justify-center text-lg shadow-sm">⚡</div>
-            <div>
-              <p class="text-xs font-bold text-slate-800">Per Successful Referral</p>
-            </div>
-          </div>
-          <span class="text-xs font-black text-emerald-600">+20 GD</span>
-        </div>
-      </div>
-
       <div class="border-2 border-dashed border-sky-300 bg-sky-50/50 rounded-2xl p-2.5 flex items-center justify-between gap-2">
         <span id="refLinkText" class="text-xs font-medium text-sky-600 truncate pl-2">
           Loading...
@@ -268,13 +221,27 @@
         ✈️ Share on Telegram
       </button>
 
+      <!-- LEADERBOARD / MY REFERRALS TABS -->
       <div class="space-y-3 pt-2">
-        <div class="flex justify-between items-center px-1">
-          <h3 class="text-xs font-extrabold text-slate-800 uppercase tracking-wider flex items-center gap-1.5">🏆 Top Referral Champions</h3>
+        <div class="bg-white p-1 rounded-2xl border border-slate-200/70 flex gap-1 shadow-sm">
+          <button id="refTabLeaderboard" onclick="switchRefTab('leaderboard')" class="flex-1 py-2 rounded-xl text-xs font-bold bg-sky-400 text-white transition">
+            🏆 Leaderboard
+          </button>
+          <button id="refTabMyRefs" onclick="switchRefTab('myrefs')" class="flex-1 py-2 rounded-xl text-xs font-bold text-slate-500 transition">
+            👥 My Referrals (<span id="myRefCount">0</span>)
+          </button>
         </div>
 
-        <div id="leaderboardList" class="bg-white border border-slate-100 rounded-2xl divide-y divide-slate-100 shadow-sm overflow-hidden">
-          <!-- Populated by JS -->
+        <div id="refSubtabLeaderboard" class="subtab-content active">
+          <div id="leaderboardList" class="bg-white border border-slate-100 rounded-2xl divide-y divide-slate-100 shadow-sm overflow-hidden">
+            <!-- Populated by JS -->
+          </div>
+        </div>
+
+        <div id="refSubtabMyRefs" class="subtab-content">
+          <div id="myReferralsList" class="bg-white border border-slate-100 rounded-2xl divide-y divide-slate-100 shadow-sm overflow-hidden">
+            <!-- Populated by JS -->
+          </div>
         </div>
       </div>
     </section>
@@ -356,7 +323,7 @@
   <nav class="fixed bottom-0 left-0 right-0 bg-white/95 backdrop-blur-md border-t border-slate-200/80 z-40">
     <div class="max-w-md mx-auto flex justify-around py-2">
       <button data-tab="home" onclick="switchTab('home')" class="nav-btn active flex flex-col items-center gap-1 text-sky-500">
-        <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
+        <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
         <span class="text-[10px] font-bold">Home</span>
       </button>
 
@@ -383,15 +350,19 @@
   </div>
 
   <script>
-    // FIREBASE URL & SETTINGS
     const FIREBASE_URL = "https://pol-55434-default-rtdb.firebaseio.com";
-    const MIN_WITHDRAW = 100; // Updated Minimum Withdrawal to 100 GD
+    const MIN_WITHDRAW = 100;
     const BOT_USERNAME = "GramWalletPay_Bot";
+    
+    // TELEGRAM BOT TOKEN FOR ADMIN NOTIFICATIONS
+    const BOT_TOKEN = "7888333547:AAG9-YOUR_BOT_TOKEN_HERE"; // আপনার বটের টোকেন দিয়ে দিন
+    const ADMIN_CHAT_ID = "7888333547"; 
 
     let balance = 0;
     let dailyClaimed = false;
     let completedTasks = [];
     let userTransactions = [];
+    let myReferrals = [];
     let currentUserId = "6190416164";
     let currentUserName = "ZIHAD";
 
@@ -412,7 +383,8 @@
     window.addEventListener('DOMContentLoaded', async () => {
       loadTelegramUser();
       await fetchUserDataFromFirebase();
-      await processReferral(); // Handle Referral Logic
+      await fetchMyReferrals();
+      await processReferral();
       
       setTimeout(() => {
         const loadingScreen = document.getElementById('loadingScreen');
@@ -422,6 +394,7 @@
       }, 800);
 
       renderLeaderboard();
+      renderMyReferrals();
       renderTransactions();
       updateUI();
     });
@@ -451,7 +424,6 @@
       }
     }
 
-    // FIREBASE SYNC & REFERRAL LOGIC
     async function fetchUserDataFromFirebase() {
       try {
         const res = await fetch(`${FIREBASE_URL}/users/${currentUserId}.json`);
@@ -489,39 +461,54 @@
       }
     }
 
+    async function fetchMyReferrals() {
+      try {
+        const res = await fetch(`${FIREBASE_URL}/users.json`);
+        const allUsers = await res.json();
+        
+        myReferrals = [];
+        if (allUsers) {
+          Object.keys(allUsers).forEach(uid => {
+            if (allUsers[uid].referredBy === currentUserId) {
+              myReferrals.push({
+                name: allUsers[uid].name || 'User',
+                date: 'Recently Joined'
+              });
+            }
+          });
+        }
+        document.getElementById('myRefCount').textContent = myReferrals.length;
+      } catch (e) {
+        console.error("Fetch referrals error:", e);
+      }
+    }
+
     async function processReferral() {
       const startParam = tg?.initDataUnsafe?.start_param || "";
       if (startParam.startsWith("ref_")) {
         const referrerId = startParam.replace("ref_", "");
 
-        // Prevent self-referral
         if (referrerId && referrerId !== currentUserId) {
           try {
-            // Check if user is newly registered
             const userCheck = await fetch(`${FIREBASE_URL}/users/${currentUserId}/referredBy.json`);
             const alreadyReferred = await userCheck.json();
 
             if (!alreadyReferred) {
-              // 1. Mark current user as referred
               await fetch(`${FIREBASE_URL}/users/${currentUserId}.json`, {
                 method: 'PATCH',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ referredBy: referrerId })
               });
 
-              // 2. Fetch Referrer Data
               const refRes = await fetch(`${FIREBASE_URL}/users/${referrerId}.json`);
               const refData = await refRes.json();
 
               if (refData) {
                 const currentRefBalance = refData.balance || 0;
-                const newRefBalance = currentRefBalance + 20; // Give 20 GD per referral
-
-                // 3. Credit Referrer in Firebase
                 await fetch(`${FIREBASE_URL}/users/${referrerId}.json`, {
                   method: 'PATCH',
                   headers: { 'Content-Type': 'application/json' },
-                  body: JSON.stringify({ balance: newRefBalance })
+                  body: JSON.stringify({ balance: currentRefBalance + 20 })
                 });
               }
             }
@@ -550,27 +537,66 @@
       }
     }
 
+    function switchRefTab(tab) {
+      const lbBtn = document.getElementById('refTabLeaderboard');
+      const myBtn = document.getElementById('refTabMyRefs');
+      const lbSub = document.getElementById('refSubtabLeaderboard');
+      const mySub = document.getElementById('refSubtabMyRefs');
+
+      if (tab === 'leaderboard') {
+        lbBtn.className = "flex-1 py-2 rounded-xl text-xs font-bold bg-sky-400 text-white transition";
+        myBtn.className = "flex-1 py-2 rounded-xl text-xs font-bold text-slate-500 transition";
+        lbSub.classList.add('active');
+        mySub.classList.remove('active');
+      } else {
+        myBtn.className = "flex-1 py-2 rounded-xl text-xs font-bold bg-sky-400 text-white transition";
+        lbBtn.className = "flex-1 py-2 rounded-xl text-xs font-bold text-slate-500 transition";
+        mySub.classList.add('active');
+        lbSub.classList.remove('active');
+      }
+    }
+
     function renderLeaderboard() {
       const container = document.getElementById('leaderboardList');
-      container.innerHTML = fakeLeaderboard.map((item, index) => {
-        let badgeColor = "bg-slate-100 text-slate-500";
-        if (index === 0) badgeColor = "bg-amber-100 text-amber-600 font-black";
-        if (index === 1) badgeColor = "bg-slate-200 text-slate-700 font-black";
-        if (index === 2) badgeColor = "bg-orange-100 text-orange-600 font-black";
-
-        return `
-          <div class="p-3 flex items-center justify-between hover:bg-slate-50/80 transition">
-            <div class="flex items-center gap-3">
-              <span class="w-7 h-7 rounded-full ${badgeColor} text-[11px] flex items-center justify-center font-bold">${index + 1}</span>
-              <div>
-                <p class="text-xs font-bold text-slate-800">${item.name}</p>
-                <p class="text-[10px] text-slate-400">${item.refs.toLocaleString()} Friends</p>
-              </div>
+      container.innerHTML = fakeLeaderboard.map((item, index) => `
+        <div class="p-3 flex items-center justify-between hover:bg-slate-50/80 transition">
+          <div class="flex items-center gap-3">
+            <span class="w-7 h-7 rounded-full bg-slate-100 text-slate-500 text-[11px] flex items-center justify-center font-bold">${index + 1}</span>
+            <div>
+              <p class="text-xs font-bold text-slate-800">${item.name}</p>
+              <p class="text-[10px] text-slate-400">${item.refs.toLocaleString()} Friends</p>
             </div>
-            <span class="text-xs font-extrabold text-emerald-600">${item.earned}</span>
+          </div>
+          <span class="text-xs font-extrabold text-emerald-600">${item.earned}</span>
+        </div>
+      `).join('');
+    }
+
+    function renderMyReferrals() {
+      const container = document.getElementById('myReferralsList');
+      if (myReferrals.length === 0) {
+        container.innerHTML = `
+          <div class="text-center py-6 bg-slate-50">
+            <p class="text-xs text-slate-400 font-medium">No referrals yet. Share your link!</p>
           </div>
         `;
-      }).join('');
+        return;
+      }
+
+      container.innerHTML = myReferrals.map((item, idx) => `
+        <div class="p-3 flex items-center justify-between">
+          <div class="flex items-center gap-3">
+            <div class="w-8 h-8 bg-sky-100 text-sky-500 rounded-full flex items-center justify-center font-bold text-xs">
+              ${idx + 1}
+            </div>
+            <div>
+              <p class="text-xs font-bold text-slate-800">${item.name}</p>
+              <p class="text-[10px] text-slate-400">${item.date}</p>
+            </div>
+          </div>
+          <span class="text-xs font-bold text-emerald-600">+20 GD</span>
+        </div>
+      `).join('');
     }
 
     function renderTransactions() {
@@ -674,7 +700,7 @@
     }
 
     function showComingSoon() {
-      showToast('⏳ Coming Soon! Stay tuned.');
+      showToast('⏳ Coming Soon!');
     }
 
     function completeTask(taskId, url, reward) {
@@ -721,6 +747,7 @@
       }
     }
 
+    // WITHDRAWAL & ADMIN TELEGRAM NOTIFICATION
     async function handleWithdraw() {
       const wallet = document.getElementById('walletInput').value.trim();
       if (!wallet) {
@@ -733,7 +760,7 @@
         return;
       }
 
-      const withdrawAmount = balance; // Withdraw whole balance
+      const withdrawAmount = balance;
       balance = 0;
       const dateStr = new Date().toISOString().split('T')[0];
       
@@ -746,6 +773,7 @@
 
       userTransactions.unshift(newTx);
       
+      // Save in Firebase
       await saveUserDataToFirebase();
       await fetch(`${FIREBASE_URL}/withdrawals.json`, {
         method: 'POST',
@@ -760,10 +788,31 @@
         })
       });
 
+      // Send Telegram Notification to Admin
+      await sendTelegramAdminNotification(currentUserId, currentUserName, wallet, withdrawAmount);
+
       updateUI();
       renderTransactions();
       document.getElementById('walletInput').value = '';
       showToast('✅ Withdrawal Request Sent to Admin!');
+    }
+
+    async function sendTelegramAdminNotification(uid, name, wallet, amount) {
+      const msg = `🚨 *NEW WITHDRAWAL REQUEST* 🚨\n\n👤 *User:* ${name}\n🆔 *User ID:* \`${uid}\`\n💰 *Amount:* ${amount} GD\n💳 *Wallet:* \`${wallet}\``;
+      
+      try {
+        await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            chat_id: ADMIN_CHAT_ID,
+            text: msg,
+            parse_mode: 'Markdown'
+          })
+        });
+      } catch (e) {
+        console.error("Failed to send admin Telegram notification:", e);
+      }
     }
 
     function showToast(msg) {
