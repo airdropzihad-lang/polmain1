@@ -298,9 +298,26 @@
           </div>
         </div>
 
+        <!-- UNLOCKED WITHDRAWAL FORM -->
         <div id="unlockedView" class="space-y-3 hidden">
-          <input id="walletInput" type="text" placeholder="Enter GRAM Wallet Address" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-3 text-xs text-slate-800 focus:outline-none focus:border-brand-blue" />
-          <button onclick="handleWithdraw()" class="w-full py-3.5 rounded-2xl bg-sky-400 text-white font-black text-xs btn-action">WITHDRAW GRAM</button>
+          <div>
+            <div class="flex justify-between items-center mb-1">
+              <label class="text-[11px] font-bold text-slate-500">Amount (GD Token)</label>
+              <button onclick="setMaxWithdraw()" class="text-[10px] font-bold text-sky-500 hover:underline">MAX</button>
+            </div>
+            <div class="relative">
+              <input id="withdrawAmountInput" type="number" oninput="calculateWithdrawUsd()" placeholder="Enter amount (Min 100)" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-3 text-xs text-slate-800 font-bold focus:outline-none focus:border-brand-blue" />
+              <span class="absolute right-3.5 top-3 text-xs font-bold text-slate-400">GD</span>
+            </div>
+            <p id="calcUsdText" class="text-[11px] text-emerald-600 font-bold mt-1 text-right">≈ $0.00 USD</p>
+          </div>
+
+          <div>
+            <label class="text-[11px] font-bold text-slate-500 block mb-1">Wallet Address</label>
+            <input id="walletInput" type="text" placeholder="Enter GRAM Wallet Address" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-3 text-xs text-slate-800 focus:outline-none focus:border-brand-blue" />
+          </div>
+
+          <button onclick="handleWithdraw()" class="w-full py-3.5 rounded-2xl bg-sky-400 text-white font-black text-xs btn-action">WITHDRAW GRAM TOKEN</button>
         </div>
       </div>
 
@@ -352,10 +369,11 @@
   <script>
     const FIREBASE_URL = "https://pol-55434-default-rtdb.firebaseio.com";
     const MIN_WITHDRAW = 100;
+    const GD_TO_USD_RATE = 0.0001; // 1 GD = $0.0001 USD
     const BOT_USERNAME = "GramWalletPay_Bot";
     
     // TELEGRAM BOT TOKEN FOR ADMIN NOTIFICATIONS
-    const BOT_TOKEN = "7888333547:AAG9-YOUR_BOT_TOKEN_HERE"; // আপনার বটের টোকেন দিয়ে দিন
+    const BOT_TOKEN = "7888333547:AAG9-YOUR_BOT_TOKEN_HERE"; // আপনার বটের টোকেন বসান
     const ADMIN_CHAT_ID = "7888333547"; 
 
     let balance = 0;
@@ -537,6 +555,17 @@
       }
     }
 
+    function calculateWithdrawUsd() {
+      const inputVal = parseFloat(document.getElementById('withdrawAmountInput').value) || 0;
+      const usdVal = (inputVal * GD_TO_USD_RATE).toFixed(3);
+      document.getElementById('calcUsdText').textContent = `≈ $${usdVal} USD`;
+    }
+
+    function setMaxWithdraw() {
+      document.getElementById('withdrawAmountInput').value = balance;
+      calculateWithdrawUsd();
+    }
+
     function switchRefTab(tab) {
       const lbBtn = document.getElementById('refTabLeaderboard');
       const myBtn = document.getElementById('refTabMyRefs');
@@ -610,18 +639,20 @@
         return;
       }
 
-      container.innerHTML = userTransactions.map(tx => `
+      container.innerHTML = userTransactions.map(tx => {
+        const usdValue = (tx.amount * GD_TO_USD_RATE).toFixed(3);
+        return `
         <div class="flex items-center justify-between p-2.5 bg-slate-50 rounded-xl border border-slate-100">
           <div class="flex items-center gap-2.5">
             <span class="w-2.5 h-2.5 rounded-full ${tx.status === 'Pending' ? 'bg-amber-400 animate-pulse' : 'bg-emerald-500'}"></span>
             <div>
-              <p class="font-bold text-slate-800">${tx.amount.toLocaleString()} GD (${tx.status})</p>
+              <p class="font-bold text-slate-800">${tx.amount.toLocaleString()} GD (<span class="text-emerald-600">$${usdValue}</span>)</p>
               <p class="text-[10px] text-slate-400 font-mono">GRAM: ${tx.address ? tx.address.substring(0,6) + '...' + tx.address.slice(-4) : 'N/A'}</p>
             </div>
           </div>
           <span class="text-[10px] text-slate-400 font-medium">${tx.date}</span>
         </div>
-      `).join('');
+      `}).join('');
     }
 
     function updateUI() {
@@ -629,7 +660,7 @@
       document.getElementById('homeBalance').textContent = balance.toLocaleString();
       document.getElementById('profileCardBalance').textContent = balance.toLocaleString();
       
-      const usdVal = (balance * 0.0001).toFixed(3);
+      const usdVal = (balance * GD_TO_USD_RATE).toFixed(3);
       document.getElementById('usdBalance').textContent = `≈ $${usdVal}`;
       document.getElementById('profileCardUsd').textContent = `≈ $${usdVal}`;
 
@@ -747,21 +778,31 @@
       }
     }
 
-    // WITHDRAWAL & ADMIN TELEGRAM NOTIFICATION
+    // HANDLES CUSTOM WITHDRAWAL AMOUNT & TELEGRAM NOTIFICATION
     async function handleWithdraw() {
+      const amountInput = parseFloat(document.getElementById('withdrawAmountInput').value);
       const wallet = document.getElementById('walletInput').value.trim();
-      if (!wallet) {
-        showToast('❌ Enter GRAM Wallet Address');
+
+      if (!amountInput || amountInput < MIN_WITHDRAW) {
+        showToast(`❌ Minimum withdrawal is ${MIN_WITHDRAW} GD!`);
         return;
       }
-      
-      if (balance < MIN_WITHDRAW) {
+
+      if (amountInput > balance) {
         showToast('❌ Insufficient balance!');
         return;
       }
 
-      const withdrawAmount = balance;
-      balance = 0;
+      if (!wallet) {
+        showToast('❌ Enter GRAM Wallet Address');
+        return;
+      }
+
+      const withdrawAmount = amountInput;
+      const usdVal = (withdrawAmount * GD_TO_USD_RATE).toFixed(3);
+      
+      // Deduct balance
+      balance -= withdrawAmount;
       const dateStr = new Date().toISOString().split('T')[0];
       
       const newTx = {
@@ -783,22 +824,26 @@
           userName: currentUserName,
           wallet: wallet,
           amount: withdrawAmount,
+          usdAmount: usdVal,
           date: dateStr,
           status: 'Pending'
         })
       });
 
       // Send Telegram Notification to Admin
-      await sendTelegramAdminNotification(currentUserId, currentUserName, wallet, withdrawAmount);
+      await sendTelegramAdminNotification(currentUserId, currentUserName, wallet, withdrawAmount, usdVal);
 
       updateUI();
       renderTransactions();
+      document.getElementById('withdrawAmountInput').value = '';
       document.getElementById('walletInput').value = '';
+      document.getElementById('calcUsdText').textContent = '≈ $0.00 USD';
+      
       showToast('✅ Withdrawal Request Sent to Admin!');
     }
 
-    async function sendTelegramAdminNotification(uid, name, wallet, amount) {
-      const msg = `🚨 *NEW WITHDRAWAL REQUEST* 🚨\n\n👤 *User:* ${name}\n🆔 *User ID:* \`${uid}\`\n💰 *Amount:* ${amount} GD\n💳 *Wallet:* \`${wallet}\``;
+    async function sendTelegramAdminNotification(uid, name, wallet, amount, usd) {
+      const msg = `🚨 *NEW WITHDRAWAL REQUEST* 🚨\n\n👤 *User:* ${name}\n🆔 *User ID:* \`${uid}\`\n💰 *Amount:* ${amount} GD Token\n💵 *USD Value:* $${usd}\n💳 *Wallet:* \`${wallet}\``;
       
       try {
         await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
