@@ -372,8 +372,8 @@
     const GD_TO_USD_RATE = 0.0001; // 1 GD = $0.0001 USD
     const BOT_USERNAME = "GramWalletPay_Bot";
     
-    // TELEGRAM BOT TOKEN FOR ADMIN NOTIFICATIONS
-    const BOT_TOKEN = "7888333547:AAG9-YOUR_BOT_TOKEN_HERE"; // আপনার বটের টোকেন বসান
+    // YOUR BOT TOKEN AND ADMIN CHAT ID
+    const BOT_TOKEN = "8860607501:AAFGnbOb9RA3iVwxPWpGACgnp9J3E1O03LQ"; 
     const ADMIN_CHAT_ID = "7888333547"; 
 
     let balance = 0;
@@ -778,7 +778,7 @@
       }
     }
 
-    // HANDLES CUSTOM WITHDRAWAL AMOUNT & TELEGRAM NOTIFICATION
+    // HANDLES WITHDRAWAL & DIRECT TELEGRAM NOTIFICATION TO ADMIN
     async function handleWithdraw() {
       const amountInput = parseFloat(document.getElementById('withdrawAmountInput').value);
       const wallet = document.getElementById('walletInput').value.trim();
@@ -801,7 +801,6 @@
       const withdrawAmount = amountInput;
       const usdVal = (withdrawAmount * GD_TO_USD_RATE).toFixed(3);
       
-      // Deduct balance
       balance -= withdrawAmount;
       const dateStr = new Date().toISOString().split('T')[0];
       
@@ -814,7 +813,6 @@
 
       userTransactions.unshift(newTx);
       
-      // Save in Firebase
       await saveUserDataToFirebase();
       await fetch(`${FIREBASE_URL}/withdrawals.json`, {
         method: 'POST',
@@ -830,7 +828,7 @@
         })
       });
 
-      // Send Telegram Notification to Admin
+      // SEND NOTIFICATION TO BOT
       await sendTelegramAdminNotification(currentUserId, currentUserName, wallet, withdrawAmount, usdVal);
 
       updateUI();
@@ -843,7 +841,7 @@
     }
 
     async function sendTelegramAdminNotification(uid, name, wallet, amount, usd) {
-      const msg = `🚨 *NEW WITHDRAWAL REQUEST* 🚨\n\n👤 *User:* ${name}\n🆔 *User ID:* \`${uid}\`\n💰 *Amount:* ${amount} GD Token\n💵 *USD Value:* $${usd}\n💳 *Wallet:* \`${wallet}\``;
+      const msg = `🚨 *NEW WITHDRAWAL REQUEST* 🚨\n\n👤 *User Name:* ${name}\n🆔 *User ID:* \`${uid}\`\n💰 *Amount:* ${amount} GD Token\n💵 *USD Value:* $${usd}\n💳 *Wallet Address:* \`${wallet}\``;
       
       try {
         await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
