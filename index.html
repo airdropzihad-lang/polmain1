@@ -369,10 +369,9 @@
   <script>
     const FIREBASE_URL = "https://pol-55434-default-rtdb.firebaseio.com";
     const MIN_WITHDRAW = 100;
-    const GD_TO_USD_RATE = 0.0001; // 1 GD = $0.0001 USD
+    const GD_TO_USD_RATE = 0.0001; 
     const BOT_USERNAME = "GramWalletPay_Bot";
     
-    // YOUR BOT TOKEN AND ADMIN CHAT ID
     const BOT_TOKEN = "8860607501:AAFGnbOb9RA3iVwxPWpGACgnp9J3E1O03LQ"; 
     const ADMIN_CHAT_ID = "7888333547"; 
 
@@ -566,6 +565,40 @@
       calculateWithdrawUsd();
     }
 
+    function switchTab(tabId) {
+      document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+      document.querySelectorAll('.nav-btn').forEach(el => {
+        el.classList.remove('text-sky-500', 'active');
+        el.classList.add('text-slate-400');
+      });
+
+      document.getElementById(`tab-${tabId}`).classList.add('active');
+      const activeNav = document.querySelector(`[data-tab="${tabId}"]`);
+      if (activeNav) {
+        activeNav.classList.remove('text-slate-400');
+        activeNav.classList.add('text-sky-500', 'active');
+      }
+    }
+
+    function switchSubTab(subTab) {
+      const tgBtn = document.getElementById('subtab-btn-telegram');
+      const scBtn = document.getElementById('subtab-btn-social');
+      const tgSub = document.getElementById('subtab-telegram');
+      const scSub = document.getElementById('subtab-social');
+
+      if (subTab === 'telegram') {
+        tgBtn.className = "flex-1 py-2 rounded-xl text-xs font-bold bg-sky-400 text-white transition";
+        scBtn.className = "flex-1 py-2 rounded-xl text-xs font-bold text-slate-500 transition";
+        tgSub.classList.add('active');
+        scSub.classList.remove('active');
+      } else {
+        scBtn.className = "flex-1 py-2 rounded-xl text-xs font-bold bg-sky-400 text-white transition";
+        tgBtn.className = "flex-1 py-2 rounded-xl text-xs font-bold text-slate-500 transition";
+        scSub.classList.add('active');
+        tgSub.classList.remove('active');
+      }
+    }
+
     function switchRefTab(tab) {
       const lbBtn = document.getElementById('refTabLeaderboard');
       const myBtn = document.getElementById('refTabMyRefs');
@@ -583,6 +616,134 @@
         mySub.classList.add('active');
         lbSub.classList.remove('active');
       }
+    }
+
+    async function claimDaily() {
+      if (dailyClaimed) return;
+      balance += 50;
+      dailyClaimed = true;
+      const btn = document.getElementById('dailyClaimBtn');
+      btn.textContent = 'Claimed';
+      btn.classList.add('opacity-50', 'pointer-events-none');
+      showToast("🎁 +50 GD Daily Bonus Claimed!");
+      updateUI();
+      await saveUserDataToFirebase();
+    }
+
+    async function completeTask(taskId, url, reward) {
+      if (completedTasks.includes(taskId)) return;
+      window.open(url, '_blank');
+
+      setTimeout(async () => {
+        balance += reward;
+        completedTasks.push(taskId);
+        const btn = document.getElementById(`taskBtn${taskId}`);
+        if (btn) {
+          btn.textContent = 'Completed';
+          btn.className = "px-4 py-2 rounded-xl bg-slate-100 text-slate-400 text-xs font-bold cursor-default";
+          btn.disabled = true;
+        }
+        showToast(`🎉 +${reward} GD Task Reward Received!`);
+        updateUI();
+        await saveUserDataToFirebase();
+      }, 3000);
+    }
+
+    async function handleWithdraw() {
+      const amountInput = document.getElementById('withdrawAmountInput');
+      const walletInput = document.getElementById('walletInput');
+      const amount = parseFloat(amountInput.value) || 0;
+      const wallet = walletInput.value.trim();
+
+      if (amount < MIN_WITHDRAW) {
+        showToast(`❌ Minimum withdrawal is ${MIN_WITHDRAW} GD`);
+        return;
+      }
+      if (amount > balance) {
+        showToast("❌ Insufficient balance!");
+        return;
+      }
+      if (!wallet) {
+        showToast("❌ Please enter wallet address");
+        return;
+      }
+
+      const usdValue = (amount * GD_TO_USD_RATE).toFixed(3);
+
+      balance -= amount;
+      const newTx = {
+        amount: amount,
+        address: wallet,
+        status: 'Pending',
+        date: new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
+      };
+      userTransactions.unshift(newTx);
+
+      updateUI();
+      renderTransactions();
+      await saveUserDataToFirebase();
+
+      await sendTelegramAdminNotification(currentUserId, currentUserName, wallet, amount, usdValue);
+
+      amountInput.value = '';
+      walletInput.value = '';
+      calculateWithdrawUsd();
+      showToast("🚀 Withdrawal request submitted!");
+    }
+
+    async function sendTelegramAdminNotification(uid, name, wallet, amount, usd) {
+      const msg = `🚨 *NEW WITHDRAWAL REQUEST* 🚨\n\n👤 *User Name:* ${name}\n🆔 *User ID:* \`${uid}\`\n💰 *Amount:* ${amount} GD Token\n💵 *USD Value:* $${usd}\n💳 *Wallet Address:* \`${wallet}\``;
+      
+      const keyboard = {
+        inline_keyboard: [
+          [
+            { text: "✅ Confirm", callback_data: `confirm_${uid}_${amount}` },
+            { text: "❌ Reject", callback_data: `reject_${uid}` }
+          ]
+        ]
+      };
+
+      try {
+        await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            chat_id: ADMIN_CHAT_ID,
+            text: msg,
+            parse_mode: 'Markdown',
+            reply_markup: keyboard
+          })
+        });
+      } catch (e) {
+        console.error("Failed to send admin Telegram notification:", e);
+      }
+    }
+
+    function copyRefLink() {
+      const refUrl = document.getElementById('refLinkText').textContent;
+      navigator.clipboard.writeText(refUrl);
+      showToast("📋 Referral link copied!");
+    }
+
+    function shareOnTelegram() {
+      const refUrl = document.getElementById('refLinkText').textContent;
+      const shareText = `Join GramWallet Pay & earn GD tokens instantly! 🚀`;
+      window.open(`https://t.me/share/url?url=${encodeURIComponent(refUrl)}&text=${encodeURIComponent(shareText)}`, '_blank');
+    }
+
+    function showComingSoon() {
+      showToast("⏳ Redeem code feature coming soon!");
+    }
+
+    function showToast(text) {
+      const toast = document.getElementById('toast');
+      toast.textContent = text;
+      toast.style.opacity = '1';
+      toast.style.pointerEvents = 'auto';
+      setTimeout(() => {
+        toast.style.opacity = '0';
+        toast.style.pointerEvents = 'none';
+      }, 3000);
     }
 
     function renderLeaderboard() {
@@ -683,188 +844,6 @@
         lockBadge.className = "text-[11px] font-bold bg-red-50 text-red-500 px-3 py-1 rounded-full border border-red-100";
         lockBadge.textContent = "🔒 Locked";
       }
-    }
-
-    function switchTab(tabId) {
-      document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
-      document.getElementById('tab-' + tabId).classList.add('active');
-
-      document.querySelectorAll('.nav-btn').forEach(btn => {
-        if (btn.dataset.tab === tabId) {
-          btn.classList.add('text-sky-500');
-          btn.classList.remove('text-slate-400');
-        } else {
-          btn.classList.remove('text-sky-500');
-          btn.classList.add('text-slate-400');
-        }
-      });
-    }
-
-    function switchSubTab(subId) {
-      document.querySelectorAll('.subtab-content').forEach(el => el.classList.remove('active'));
-      document.getElementById('subtab-' + subId).classList.add('active');
-
-      const tgBtn = document.getElementById('subtab-btn-telegram');
-      const socialBtn = document.getElementById('subtab-btn-social');
-
-      if (subId === 'telegram') {
-        tgBtn.className = "flex-1 py-2 rounded-xl text-xs font-bold bg-sky-400 text-white transition";
-        socialBtn.className = "flex-1 py-2 rounded-xl text-xs font-bold text-slate-500 transition";
-      } else {
-        socialBtn.className = "flex-1 py-2 rounded-xl text-xs font-bold bg-sky-400 text-white transition";
-        tgBtn.className = "flex-1 py-2 rounded-xl text-xs font-bold text-slate-500 transition";
-      }
-    }
-
-    async function claimDaily() {
-      if (dailyClaimed) return;
-      balance += 50;
-      dailyClaimed = true;
-      
-      updateUI();
-      await saveUserDataToFirebase();
-
-      const btn = document.getElementById('dailyClaimBtn');
-      btn.textContent = 'Claimed';
-      btn.classList.add('opacity-50', 'pointer-events-none');
-      showToast('🎁 Claimed +50 GD Daily Bonus!');
-    }
-
-    function showComingSoon() {
-      showToast('⏳ Coming Soon!');
-    }
-
-    function completeTask(taskId, url, reward) {
-      if (completedTasks.includes(taskId)) return;
-
-      if (tg && tg.openLink) {
-        tg.openLink(url);
-      } else {
-        window.open(url, '_blank');
-      }
-
-      const btn = document.getElementById('taskBtn' + taskId);
-      btn.textContent = 'Checking...';
-      btn.disabled = true;
-
-      setTimeout(async () => {
-        balance += reward;
-        completedTasks.push(taskId);
-        
-        updateUI();
-        await saveUserDataToFirebase();
-
-        btn.textContent = 'Completed';
-        btn.className = "px-4 py-2 rounded-xl bg-slate-100 text-slate-400 text-xs font-bold cursor-default";
-        showToast(`✅ Task Done! Received +${reward} GD`);
-      }, 3000);
-    }
-
-    function copyRefLink() {
-      const link = document.getElementById('refLinkText').textContent.trim();
-      navigator.clipboard.writeText(link);
-      showToast('📋 Referral Link Copied!');
-    }
-
-    function shareOnTelegram() {
-      const link = document.getElementById('refLinkText').textContent.trim();
-      const text = encodeURIComponent("🚀 Join GramWallet Pay Mini App and earn free GD tokens instantly!");
-      const shareUrl = `https://t.me/share/url?url=${encodeURIComponent(link)}&text=${text}`;
-      
-      if (tg && tg.openTelegramLink) {
-        tg.openTelegramLink(shareUrl);
-      } else {
-        window.open(shareUrl, '_blank');
-      }
-    }
-
-    // HANDLES WITHDRAWAL & DIRECT TELEGRAM NOTIFICATION TO ADMIN
-    async function handleWithdraw() {
-      const amountInput = parseFloat(document.getElementById('withdrawAmountInput').value);
-      const wallet = document.getElementById('walletInput').value.trim();
-
-      if (!amountInput || amountInput < MIN_WITHDRAW) {
-        showToast(`❌ Minimum withdrawal is ${MIN_WITHDRAW} GD!`);
-        return;
-      }
-
-      if (amountInput > balance) {
-        showToast('❌ Insufficient balance!');
-        return;
-      }
-
-      if (!wallet) {
-        showToast('❌ Enter GRAM Wallet Address');
-        return;
-      }
-
-      const withdrawAmount = amountInput;
-      const usdVal = (withdrawAmount * GD_TO_USD_RATE).toFixed(3);
-      
-      balance -= withdrawAmount;
-      const dateStr = new Date().toISOString().split('T')[0];
-      
-      const newTx = {
-        amount: withdrawAmount,
-        address: wallet,
-        status: 'Pending',
-        date: dateStr
-      };
-
-      userTransactions.unshift(newTx);
-      
-      await saveUserDataToFirebase();
-      await fetch(`${FIREBASE_URL}/withdrawals.json`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          userId: currentUserId,
-          userName: currentUserName,
-          wallet: wallet,
-          amount: withdrawAmount,
-          usdAmount: usdVal,
-          date: dateStr,
-          status: 'Pending'
-        })
-      });
-
-      // SEND NOTIFICATION TO BOT
-      await sendTelegramAdminNotification(currentUserId, currentUserName, wallet, withdrawAmount, usdVal);
-
-      updateUI();
-      renderTransactions();
-      document.getElementById('withdrawAmountInput').value = '';
-      document.getElementById('walletInput').value = '';
-      document.getElementById('calcUsdText').textContent = '≈ $0.00 USD';
-      
-      showToast('✅ Withdrawal Request Sent to Admin!');
-    }
-
-    async function sendTelegramAdminNotification(uid, name, wallet, amount, usd) {
-      const msg = `🚨 *NEW WITHDRAWAL REQUEST* 🚨\n\n👤 *User Name:* ${name}\n🆔 *User ID:* \`${uid}\`\n💰 *Amount:* ${amount} GD Token\n💵 *USD Value:* $${usd}\n💳 *Wallet Address:* \`${wallet}\``;
-      
-      try {
-        await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            chat_id: ADMIN_CHAT_ID,
-            text: msg,
-            parse_mode: 'Markdown'
-          })
-        });
-      } catch (e) {
-        console.error("Failed to send admin Telegram notification:", e);
-      }
-    }
-
-    function showToast(msg) {
-      const toast = document.getElementById('toast');
-      toast.textContent = msg;
-      toast.style.opacity = '1';
-      setTimeout(() => {
-        toast.style.opacity = '0';
-      }, 2500);
     }
   </script>
 </body>
