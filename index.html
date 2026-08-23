@@ -80,7 +80,7 @@
         <span class="w-2.5 h-2.5 bg-emerald-500 border-2 border-white rounded-full absolute -bottom-0.5 -right-0.5"></span>
       </div>
       <div>
-        <span id="headerUserName" class="font-black text-sm text-slate-900 tracking-tight block leading-tight">ZIHAD</span>
+        <span id="headerUserName" class="font-black text-sm text-slate-900 tracking-tight block leading-tight">User</span>
         <span class="text-[10px] text-sky-500 font-bold uppercase tracking-wider">GramWallet Pay</span>
       </div>
     </div>
@@ -221,7 +221,6 @@
         ✈️ Share on Telegram
       </button>
 
-      <!-- LEADERBOARD / MY REFERRALS TABS -->
       <div class="space-y-3 pt-2">
         <div class="bg-white p-1 rounded-2xl border border-slate-200/70 flex gap-1 shadow-sm">
           <button id="refTabLeaderboard" onclick="switchRefTab('leaderboard')" class="flex-1 py-2 rounded-xl text-xs font-bold bg-sky-400 text-white transition">
@@ -234,13 +233,11 @@
 
         <div id="refSubtabLeaderboard" class="subtab-content active">
           <div id="leaderboardList" class="bg-white border border-slate-100 rounded-2xl divide-y divide-slate-100 shadow-sm overflow-hidden">
-            <!-- Populated by JS -->
           </div>
         </div>
 
         <div id="refSubtabMyRefs" class="subtab-content">
           <div id="myReferralsList" class="bg-white border border-slate-100 rounded-2xl divide-y divide-slate-100 shadow-sm overflow-hidden">
-            <!-- Populated by JS -->
           </div>
         </div>
       </div>
@@ -261,7 +258,7 @@
               <span id="profileCardAvatarFallback">◆</span>
             </div>
             <div>
-              <h3 id="profileFullName" class="font-black text-sm tracking-wide line-clamp-1">ZIHAD</h3>
+              <h3 id="profileFullName" class="font-black text-sm tracking-wide line-clamp-1">User</h3>
               <p id="profileUserId" class="text-[11px] opacity-80 font-mono">ID ...</p>
             </div>
           </div>
@@ -313,8 +310,8 @@
           </div>
 
           <div>
-            <label class="text-[11px] font-bold text-slate-500 block mb-1">Wallet Address</label>
-            <input id="walletInput" type="text" placeholder="Enter GRAM Wallet Address" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-3 text-xs text-slate-800 focus:outline-none focus:border-brand-blue" />
+            <label class="text-[11px] font-bold text-slate-500 block mb-1">TON / GRAM Wallet Address</label>
+            <input id="walletInput" type="text" placeholder="EQ... or UQ... (TON Keeper address)" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-3 text-xs text-slate-800 focus:outline-none focus:border-brand-blue" />
           </div>
 
           <button onclick="handleWithdraw()" class="w-full py-3.5 rounded-2xl bg-sky-400 text-white font-black text-xs btn-action">WITHDRAW GRAM TOKEN</button>
@@ -325,7 +322,6 @@
       <div class="bg-white rounded-3xl p-5 border border-slate-100 shadow-sm space-y-3">
         <h3 class="font-bold text-slate-800 text-sm">Recent Transactions</h3>
         <div id="txHistoryList" class="space-y-2.5 text-xs">
-          <!-- Populated by JS -->
         </div>
       </div>
 
@@ -372,7 +368,9 @@
     const GD_TO_USD_RATE = 0.0001; 
     const BOT_USERNAME = "GramWalletPay_Bot";
     
-    const BOT_TOKEN = "8860607501:AAFGnbOb9RA3iVwxPWpGACgnp9J3E1O03LQ"; 
+    // ★★★ শুধুমাত্র নতুন BOT_TOKEN দাও (পুরনোটা আর ব্যবহার করো না) ★★★
+    // সিকিউরিটির জন্য পরে এটা সরিয়ে backend দিয়ে নোটিফিকেশন পাঠাবে
+    const BOT_TOKEN = "YOUR_NEW_BOT_TOKEN_HERE"; 
     const ADMIN_CHAT_ID = "7888333547"; 
 
     let balance = 0;
@@ -380,8 +378,8 @@
     let completedTasks = [];
     let userTransactions = [];
     let myReferrals = [];
-    let currentUserId = "6190416164";
-    let currentUserName = "ZIHAD";
+    let currentUserId = "0";
+    let currentUserName = "User";
 
     const fakeLeaderboard = [
       { name: "Jerome 🔥", refs: 492, earned: "9,840 GD" },
@@ -458,393 +456,4 @@
             btn.classList.add('opacity-50', 'pointer-events-none');
           }
 
-          if (completedTasks.includes('TgChannel')) {
-            const btn = document.getElementById('taskBtnTgChannel');
-            btn.textContent = 'Completed';
-            btn.className = "px-4 py-2 rounded-xl bg-slate-100 text-slate-400 text-xs font-bold cursor-default";
-            btn.disabled = true;
-          }
-          if (completedTasks.includes('Yt')) {
-            const btn = document.getElementById('taskBtnYt');
-            btn.textContent = 'Completed';
-            btn.className = "px-4 py-2 rounded-xl bg-slate-100 text-slate-400 text-xs font-bold cursor-default";
-            btn.disabled = true;
-          }
-        } else {
-          await saveUserDataToFirebase();
-        }
-      } catch (e) {
-        console.error("Firebase fetch error:", e);
-      }
-    }
-
-    async function fetchMyReferrals() {
-      try {
-        const res = await fetch(`${FIREBASE_URL}/users.json`);
-        const allUsers = await res.json();
-        
-        myReferrals = [];
-        if (allUsers) {
-          Object.keys(allUsers).forEach(uid => {
-            if (allUsers[uid].referredBy === currentUserId) {
-              myReferrals.push({
-                name: allUsers[uid].name || 'User',
-                date: 'Recently Joined'
-              });
-            }
-          });
-        }
-        document.getElementById('myRefCount').textContent = myReferrals.length;
-      } catch (e) {
-        console.error("Fetch referrals error:", e);
-      }
-    }
-
-    async function processReferral() {
-      const startParam = tg?.initDataUnsafe?.start_param || "";
-      if (startParam.startsWith("ref_")) {
-        const referrerId = startParam.replace("ref_", "");
-
-        if (referrerId && referrerId !== currentUserId) {
-          try {
-            const userCheck = await fetch(`${FIREBASE_URL}/users/${currentUserId}/referredBy.json`);
-            const alreadyReferred = await userCheck.json();
-
-            if (!alreadyReferred) {
-              await fetch(`${FIREBASE_URL}/users/${currentUserId}.json`, {
-                method: 'PATCH',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ referredBy: referrerId })
-              });
-
-              const refRes = await fetch(`${FIREBASE_URL}/users/${referrerId}.json`);
-              const refData = await refRes.json();
-
-              if (refData) {
-                const currentRefBalance = refData.balance || 0;
-                await fetch(`${FIREBASE_URL}/users/${referrerId}.json`, {
-                  method: 'PATCH',
-                  headers: { 'Content-Type': 'application/json' },
-                  body: JSON.stringify({ balance: currentRefBalance + 20 })
-                });
-              }
-            }
-          } catch (e) {
-            console.error("Referral process error:", e);
-          }
-        }
-      }
-    }
-
-    async function saveUserDataToFirebase() {
-      try {
-        await fetch(`${FIREBASE_URL}/users/${currentUserId}.json`, {
-          method: 'PATCH',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            name: currentUserName,
-            balance: balance,
-            dailyClaimed: dailyClaimed,
-            completedTasks: completedTasks,
-            transactions: userTransactions
-          })
-        });
-      } catch (e) {
-        console.error("Firebase save error:", e);
-      }
-    }
-
-    function calculateWithdrawUsd() {
-      const inputVal = parseFloat(document.getElementById('withdrawAmountInput').value) || 0;
-      const usdVal = (inputVal * GD_TO_USD_RATE).toFixed(3);
-      document.getElementById('calcUsdText').textContent = `≈ $${usdVal} USD`;
-    }
-
-    function setMaxWithdraw() {
-      document.getElementById('withdrawAmountInput').value = balance;
-      calculateWithdrawUsd();
-    }
-
-    function switchTab(tabId) {
-      document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
-      document.querySelectorAll('.nav-btn').forEach(el => {
-        el.classList.remove('text-sky-500', 'active');
-        el.classList.add('text-slate-400');
-      });
-
-      document.getElementById(`tab-${tabId}`).classList.add('active');
-      const activeNav = document.querySelector(`[data-tab="${tabId}"]`);
-      if (activeNav) {
-        activeNav.classList.remove('text-slate-400');
-        activeNav.classList.add('text-sky-500', 'active');
-      }
-    }
-
-    function switchSubTab(subTab) {
-      const tgBtn = document.getElementById('subtab-btn-telegram');
-      const scBtn = document.getElementById('subtab-btn-social');
-      const tgSub = document.getElementById('subtab-telegram');
-      const scSub = document.getElementById('subtab-social');
-
-      if (subTab === 'telegram') {
-        tgBtn.className = "flex-1 py-2 rounded-xl text-xs font-bold bg-sky-400 text-white transition";
-        scBtn.className = "flex-1 py-2 rounded-xl text-xs font-bold text-slate-500 transition";
-        tgSub.classList.add('active');
-        scSub.classList.remove('active');
-      } else {
-        scBtn.className = "flex-1 py-2 rounded-xl text-xs font-bold bg-sky-400 text-white transition";
-        tgBtn.className = "flex-1 py-2 rounded-xl text-xs font-bold text-slate-500 transition";
-        scSub.classList.add('active');
-        tgSub.classList.remove('active');
-      }
-    }
-
-    function switchRefTab(tab) {
-      const lbBtn = document.getElementById('refTabLeaderboard');
-      const myBtn = document.getElementById('refTabMyRefs');
-      const lbSub = document.getElementById('refSubtabLeaderboard');
-      const mySub = document.getElementById('refSubtabMyRefs');
-
-      if (tab === 'leaderboard') {
-        lbBtn.className = "flex-1 py-2 rounded-xl text-xs font-bold bg-sky-400 text-white transition";
-        myBtn.className = "flex-1 py-2 rounded-xl text-xs font-bold text-slate-500 transition";
-        lbSub.classList.add('active');
-        mySub.classList.remove('active');
-      } else {
-        myBtn.className = "flex-1 py-2 rounded-xl text-xs font-bold bg-sky-400 text-white transition";
-        lbBtn.className = "flex-1 py-2 rounded-xl text-xs font-bold text-slate-500 transition";
-        mySub.classList.add('active');
-        lbSub.classList.remove('active');
-      }
-    }
-
-    async function claimDaily() {
-      if (dailyClaimed) return;
-      balance += 50;
-      dailyClaimed = true;
-      const btn = document.getElementById('dailyClaimBtn');
-      btn.textContent = 'Claimed';
-      btn.classList.add('opacity-50', 'pointer-events-none');
-      showToast("🎁 +50 GD Daily Bonus Claimed!");
-      updateUI();
-      await saveUserDataToFirebase();
-    }
-
-    async function completeTask(taskId, url, reward) {
-      if (completedTasks.includes(taskId)) return;
-      window.open(url, '_blank');
-
-      setTimeout(async () => {
-        balance += reward;
-        completedTasks.push(taskId);
-        const btn = document.getElementById(`taskBtn${taskId}`);
-        if (btn) {
-          btn.textContent = 'Completed';
-          btn.className = "px-4 py-2 rounded-xl bg-slate-100 text-slate-400 text-xs font-bold cursor-default";
-          btn.disabled = true;
-        }
-        showToast(`🎉 +${reward} GD Task Reward Received!`);
-        updateUI();
-        await saveUserDataToFirebase();
-      }, 3000);
-    }
-
-    async function handleWithdraw() {
-      const amountInput = document.getElementById('withdrawAmountInput');
-      const walletInput = document.getElementById('walletInput');
-      const amount = parseFloat(amountInput.value) || 0;
-      const wallet = walletInput.value.trim();
-
-      if (amount < MIN_WITHDRAW) {
-        showToast(`❌ Minimum withdrawal is ${MIN_WITHDRAW} GD`);
-        return;
-      }
-      if (amount > balance) {
-        showToast("❌ Insufficient balance!");
-        return;
-      }
-      if (!wallet) {
-        showToast("❌ Please enter wallet address");
-        return;
-      }
-
-      const usdValue = (amount * GD_TO_USD_RATE).toFixed(3);
-
-      balance -= amount;
-      const newTx = {
-        amount: amount,
-        address: wallet,
-        status: 'Pending',
-        date: new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
-      };
-      userTransactions.unshift(newTx);
-
-      updateUI();
-      renderTransactions();
-      await saveUserDataToFirebase();
-
-      await sendTelegramAdminNotification(currentUserId, currentUserName, wallet, amount, usdValue);
-
-      amountInput.value = '';
-      walletInput.value = '';
-      calculateWithdrawUsd();
-      showToast("🚀 Withdrawal request submitted!");
-    }
-
-    async function sendTelegramAdminNotification(uid, name, wallet, amount, usd) {
-      const msg = `🚨 *NEW WITHDRAWAL REQUEST* 🚨\n\n👤 *User Name:* ${name}\n🆔 *User ID:* \`${uid}\`\n💰 *Amount:* ${amount} GD Token\n💵 *USD Value:* $${usd}\n💳 *Wallet Address:* \`${wallet}\``;
-      
-      const keyboard = {
-        inline_keyboard: [
-          [
-            { text: "✅ Confirm", callback_data: `confirm_${uid}_${amount}` },
-            { text: "❌ Reject", callback_data: `reject_${uid}` }
-          ]
-        ]
-      };
-
-      try {
-        await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            chat_id: ADMIN_CHAT_ID,
-            text: msg,
-            parse_mode: 'Markdown',
-            reply_markup: keyboard
-          })
-        });
-      } catch (e) {
-        console.error("Failed to send admin Telegram notification:", e);
-      }
-    }
-
-    function copyRefLink() {
-      const refUrl = document.getElementById('refLinkText').textContent;
-      navigator.clipboard.writeText(refUrl);
-      showToast("📋 Referral link copied!");
-    }
-
-    function shareOnTelegram() {
-      const refUrl = document.getElementById('refLinkText').textContent;
-      const shareText = `Join GramWallet Pay & earn GD tokens instantly! 🚀`;
-      window.open(`https://t.me/share/url?url=${encodeURIComponent(refUrl)}&text=${encodeURIComponent(shareText)}`, '_blank');
-    }
-
-    function showComingSoon() {
-      showToast("⏳ Redeem code feature coming soon!");
-    }
-
-    function showToast(text) {
-      const toast = document.getElementById('toast');
-      toast.textContent = text;
-      toast.style.opacity = '1';
-      toast.style.pointerEvents = 'auto';
-      setTimeout(() => {
-        toast.style.opacity = '0';
-        toast.style.pointerEvents = 'none';
-      }, 3000);
-    }
-
-    function renderLeaderboard() {
-      const container = document.getElementById('leaderboardList');
-      container.innerHTML = fakeLeaderboard.map((item, index) => `
-        <div class="p-3 flex items-center justify-between hover:bg-slate-50/80 transition">
-          <div class="flex items-center gap-3">
-            <span class="w-7 h-7 rounded-full bg-slate-100 text-slate-500 text-[11px] flex items-center justify-center font-bold">${index + 1}</span>
-            <div>
-              <p class="text-xs font-bold text-slate-800">${item.name}</p>
-              <p class="text-[10px] text-slate-400">${item.refs.toLocaleString()} Friends</p>
-            </div>
-          </div>
-          <span class="text-xs font-extrabold text-emerald-600">${item.earned}</span>
-        </div>
-      `).join('');
-    }
-
-    function renderMyReferrals() {
-      const container = document.getElementById('myReferralsList');
-      if (myReferrals.length === 0) {
-        container.innerHTML = `
-          <div class="text-center py-6 bg-slate-50">
-            <p class="text-xs text-slate-400 font-medium">No referrals yet. Share your link!</p>
-          </div>
-        `;
-        return;
-      }
-
-      container.innerHTML = myReferrals.map((item, idx) => `
-        <div class="p-3 flex items-center justify-between">
-          <div class="flex items-center gap-3">
-            <div class="w-8 h-8 bg-sky-100 text-sky-500 rounded-full flex items-center justify-center font-bold text-xs">
-              ${idx + 1}
-            </div>
-            <div>
-              <p class="text-xs font-bold text-slate-800">${item.name}</p>
-              <p class="text-[10px] text-slate-400">${item.date}</p>
-            </div>
-          </div>
-          <span class="text-xs font-bold text-emerald-600">+20 GD</span>
-        </div>
-      `).join('');
-    }
-
-    function renderTransactions() {
-      const container = document.getElementById('txHistoryList');
-      if (!userTransactions || userTransactions.length === 0) {
-        container.innerHTML = `
-          <div class="text-center py-4 bg-slate-50 rounded-2xl border border-dashed border-slate-200">
-            <p class="text-xs text-slate-400 font-medium">No transactions yet</p>
-          </div>
-        `;
-        return;
-      }
-
-      container.innerHTML = userTransactions.map(tx => {
-        const usdValue = (tx.amount * GD_TO_USD_RATE).toFixed(3);
-        return `
-        <div class="flex items-center justify-between p-2.5 bg-slate-50 rounded-xl border border-slate-100">
-          <div class="flex items-center gap-2.5">
-            <span class="w-2.5 h-2.5 rounded-full ${tx.status === 'Pending' ? 'bg-amber-400 animate-pulse' : 'bg-emerald-500'}"></span>
-            <div>
-              <p class="font-bold text-slate-800">${tx.amount.toLocaleString()} GD (<span class="text-emerald-600">$${usdValue}</span>)</p>
-              <p class="text-[10px] text-slate-400 font-mono">GRAM: ${tx.address ? tx.address.substring(0,6) + '...' + tx.address.slice(-4) : 'N/A'}</p>
-            </div>
-          </div>
-          <span class="text-[10px] text-slate-400 font-medium">${tx.date}</span>
-        </div>
-      `}).join('');
-    }
-
-    function updateUI() {
-      document.getElementById('headerBalance').textContent = balance.toLocaleString();
-      document.getElementById('homeBalance').textContent = balance.toLocaleString();
-      document.getElementById('profileCardBalance').textContent = balance.toLocaleString();
-      
-      const usdVal = (balance * GD_TO_USD_RATE).toFixed(3);
-      document.getElementById('usdBalance').textContent = `≈ $${usdVal}`;
-      document.getElementById('profileCardUsd').textContent = `≈ $${usdVal}`;
-
-      const progressPercent = Math.min(100, (balance / MIN_WITHDRAW) * 100);
-      document.getElementById('withdrawProgressBar').style.width = progressPercent + '%';
-      
-      const remaining = Math.max(0, MIN_WITHDRAW - balance);
-      document.getElementById('withdrawProgressText').textContent = `${balance.toLocaleString()} / ${MIN_WITHDRAW} GD · ${remaining.toLocaleString()} to go`;
-
-      if (balance >= MIN_WITHDRAW) {
-        document.getElementById('lockedView').classList.add('hidden');
-        document.getElementById('unlockedView').classList.remove('hidden');
-        const lockBadge = document.getElementById('lockBadge');
-        lockBadge.className = "text-[11px] font-bold bg-emerald-50 text-emerald-600 px-3 py-1 rounded-full border border-emerald-100";
-        lockBadge.textContent = "🔓 Unlocked";
-      } else {
-        document.getElementById('lockedView').classList.remove('hidden');
-        document.getElementById('unlockedView').classList.add('hidden');
-        const lockBadge = document.getElementById('lockBadge');
-        lockBadge.className = "text-[11px] font-bold bg-red-50 text-red-500 px-3 py-1 rounded-full border border-red-100";
-        lockBadge.textContent = "🔒 Locked";
-      }
-    }
-  </script>
-</body>
-</html>
+          if (completedTasks.includes('TgChannel'))
